@@ -1,6 +1,6 @@
 {
-  "name": "kiosk",
-  "productName": "kiosk",
+  "name": "kiba",
+  "productName": "kiba",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
@@ -24,7 +24,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "kiosk"
+            "name": "kiba"
           }
         },
         {
@@ -87,6 +87,7 @@
   "dependencies": {
     "antd": "^4.20.5",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   }
