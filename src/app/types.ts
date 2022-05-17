@@ -16,11 +16,11 @@ export type Product = {
     price: number;
 }
 
-export type ShoppingCart = {
+export type Purchase = {
     id: string;
     buyer_id: string;
     custom_price?: number;
     product_ids: string[];
 }
 
-export type EventPayload = Group | Account | Product | ShoppingCart;
+export type EventPayload = Group | Account | Product | Purchase;
