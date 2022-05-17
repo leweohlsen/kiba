@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Person, Product } from "./types";
+import { Group, Person, Product } from "./types";
 
 export interface EventsState {
+  groups: Group[];
   persons: Person[];
   products: Product[];
   transactions: PayloadAction[];
 }
 
-const initialState: EventsState = {
+export const initialState: EventsState = {
+  groups: [],
   persons: [],
   products: [],
   transactions: [],
@@ -18,6 +20,9 @@ export const eventSlice = createSlice({
   name: "events",
   initialState,
   reducers: {
+    addGroup: (state, action: PayloadAction<Group>) => {
+      state.groups.push(action.payload);
+    },
     addPerson: (state, action: PayloadAction<Person>) => {
       state.persons.push(action.payload);
     },
@@ -30,6 +35,6 @@ export const eventSlice = createSlice({
   },
 });
 
-export const { addPerson, addProduct, addTransaction } = eventSlice.actions;
+export const { addGroup, addPerson, addProduct, addTransaction } = eventSlice.actions;
 
 export default eventSlice.reducer;

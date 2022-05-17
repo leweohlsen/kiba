@@ -1,13 +1,16 @@
-import { v4 as uuid } from 'uuid';
+export type Group = {
+    id: string;
+    name: string;
+}
 
 export type Person = {
-    id: typeof uuid;
+    id: string;
     name: string;
-    group_id: typeof uuid;
+    groupId: string;
 }
 
 export type Product = {
-    id: typeof uuid;
+    id: string;
     name: string;
     price: number;
 }
