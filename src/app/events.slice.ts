@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Product, ShoppingCart, EventPayload } from "./types";
+import { Group, Account, Product, Purchase, EventPayload } from "./types";
 
 export interface EventsState {
   groups: Record<string, Group>;
@@ -22,28 +22,27 @@ export const eventSlice = createSlice({
   reducers: {
     addGroup: (state, action: PayloadAction<Group>) => {
       state.groups[action.payload.id] = action.payload;
-      state.events.push(action);
     },
     addAccount: (state, action: PayloadAction<Account>) => {
       state.accounts[action.payload.id] = action.payload;
-      state.events.push(action);
     },
     addProduct: (state, action: PayloadAction<Product>) => {
       state.products[action.payload.id] = action.payload;
-      state.events.push(action);
     },
-    checkout: (state, action: PayloadAction<ShoppingCart>) => {
+    checkout: (state, action: PayloadAction<Purchase>) => {
       const buyer = state.accounts[action.payload.buyer_id];
       action.payload.product_ids.forEach((product_id) => {
         const product = state.products[product_id];
         buyer.balance -= product.price;
       });
-      state.events.push(action);
     },
+    appendEvent: (state, action: PayloadAction<PayloadAction<EventPayload>>) => {
+      state.events.push(action.payload);
+    }
   },
 });
 
-export const { addGroup, addAccount, addProduct, checkout } =
+export const { addGroup, addAccount, addProduct, checkout, appendEvent } =
   eventSlice.actions;
 
 export default eventSlice.reducer;
