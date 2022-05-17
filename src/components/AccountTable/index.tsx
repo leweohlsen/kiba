@@ -221,7 +221,7 @@ class EditableTable extends React.Component<EditableTableProps, EditableTableSta
     return (
       <div>
         <Button size='small' onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          Person hinzufügen
+          Konto hinzufügen
         </Button>
         <Table
           size='small'

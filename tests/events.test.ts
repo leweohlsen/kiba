@@ -1,6 +1,11 @@
-import type { AnyAction } from "@reduxjs/toolkit";
-import reducer, { addGroup } from "../src/app/events.slice";
-import { addPerson, initialState } from "../src/app/events.slice";
+import type { AnyAction, PayloadAction } from "@reduxjs/toolkit";
+import reducer, {
+  addGroup,
+  addProduct,
+  checkout,
+} from "../src/app/events.slice";
+import { addAccount, initialState } from "../src/app/events.slice";
+import { Account, EventPayload, Product } from "../src/app/types";
 
 const events = [
   {
@@ -120,25 +125,175 @@ const events1 = [
   { type: "DELETE_GROUP", payload: { id: "g2" } },
 ];
 
-describe("Events Reducer", () => {
+describe("Event Reducers", () => {
+  const group0 = { id: "g0", name: "Crew" };
+  const product0 = { id: "p0", name: "Kinder Pingui", price: 0.6 };
+  const product1 = { id: "p1", name: "Fritz-Kola", price: 1.5 };
+  const account0 = {
+    id: "a0",
+    name: "Hein Blöd",
+    groupId: group0.id,
+    balance: 10.0,
+  };
+  const account1 = {
+    id: "a1",
+    name: "Käpt'n Blaubär",
+    groupId: group0.id,
+    balance: 150.0,
+  };
+
+  const cart0 = { id: "c0", buyer_id: "a0", product_ids: ["p0", "p1"] };
+
   it("should return the initial state", () => {
     expect(reducer(undefined, {} as AnyAction)).toEqual(initialState);
   });
 
-  it("should add a group and two persons", () => {
-    const newGroup = { id: "g0", name: "Crew" };
-    const nextState = {
-      ...initialState,
-      groups: [newGroup],
-    };
-    expect(reducer(initialState, addGroup(newGroup))).toEqual(nextState);
+  it("should create a group and two accounts", () => {
+    let currentState = reducer(initialState, addGroup(group0));
 
-    const newPerson = { id: "p0", name: "Hein Blöd", groupId: newGroup.id };
-    expect(
-      reducer(nextState, addPerson(newPerson))
-    ).toEqual({
-      ...nextState,
-      persons: [newPerson],
+    const expectedEvents: PayloadAction<EventPayload>[] = [
+      {
+        payload: {
+          id: "g0",
+          name: "Crew",
+        },
+        type: "events/addGroup",
+      },
+    ];
+    expect(currentState).toEqual({
+      ...initialState,
+      groups: { g0: group0 },
+      events: expectedEvents,
+    });
+
+    expectedEvents.push({
+      payload: {
+        balance: 10,
+        groupId: "g0",
+        id: "a0",
+        name: "Hein Blöd",
+      },
+      type: "events/addAccount",
+    });
+
+    currentState = reducer(currentState, addAccount(account0));
+    expect(currentState).toEqual({
+      ...initialState,
+      groups: { g0: group0 },
+      accounts: { a0: account0 },
+      events: expectedEvents,
+    });
+
+    currentState = reducer(currentState, addAccount(account1));
+    expect(currentState).toEqual({
+      ...initialState,
+      groups: { g0: group0 },
+      accounts: { a0: account0, a1: account1 },
+      events: [
+        ...expectedEvents,
+        {
+          payload: {
+            balance: 150,
+            groupId: "g0",
+            id: "a1",
+            name: "Käpt'n Blaubär",
+          },
+          type: "events/addAccount",
+        },
+      ],
+    });
+  });
+
+  it("should create a product", () => {
+    const currentState = reducer(initialState, addProduct(product0));
+    expect(currentState).toEqual({
+      ...initialState,
+      products: { p0: product0 },
+      events: [
+        {
+          payload: {
+            id: "p0",
+            name: "Kinder Pingui",
+            price: 0.6,
+          },
+          type: "events/addProduct",
+        },
+      ],
+    });
+  });
+
+  it("should create an account, a two products, checkout both and decrease account balance", () => {
+    let currentState = reducer(initialState, addGroup(group0));
+    currentState = reducer(currentState, addAccount(account0));
+    currentState = reducer(currentState, addProduct(product0));
+    currentState = reducer(currentState, addProduct(product1));
+
+    const expectedEvents = [
+      {
+        payload: {
+          id: "g0",
+          name: "Crew",
+        },
+        type: "events/addGroup",
+      },
+      {
+        payload: {
+          balance: 10,
+          groupId: "g0",
+          id: "a0",
+          name: "Hein Blöd",
+        },
+        type: "events/addAccount",
+      },
+      {
+        payload: {
+          id: "p0",
+          name: "Kinder Pingui",
+          price: 0.6,
+        },
+        type: "events/addProduct",
+      },
+      {
+        payload: {
+          id: "p1",
+          name: "Fritz-Kola",
+          price: 1.5,
+        },
+        type: "events/addProduct",
+      },
+    ];
+
+    expect(currentState).toEqual({
+      ...initialState,
+      groups: { g0: group0 },
+      accounts: { a0: account0 },
+      products: { p0: product0, p1: product1 },
+      events: expectedEvents,
+    });
+
+    currentState = reducer(currentState, checkout(cart0));
+
+    expect(currentState).toEqual({
+      ...initialState,
+      groups: { g0: group0 },
+      products: { p0: product0, p1: product1 },
+      accounts: {
+        a0: {
+          ...account0,
+          balance: 7.9,
+        },
+      },
+      events: [
+        ...expectedEvents,
+        {
+          payload: {
+            buyer_id: "a0",
+            id: "c0",
+            product_ids: ["p0", "p1"],
+          },
+          type: "events/checkout",
+        },
+      ],
     });
   });
 });

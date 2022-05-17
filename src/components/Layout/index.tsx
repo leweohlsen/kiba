@@ -8,7 +8,7 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 
-import PersonSelection from '../PersonSelection';
+import AccountSelection from '../AccountSelection';
 import './style.css'
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -30,15 +30,15 @@ function getItem(
 }
 
 const menuItems: MenuItem[] = [
-  getItem('Personen', 'persons', <TeamOutlined />),
+  getItem('Konten', 'accounts', <TeamOutlined />),
   getItem('Produkte', 'products', <ShopOutlined />),
-  getItem('Transaktionen', 'transactions', <UnorderedListOutlined />),
+  getItem('Transaktionen', 'events', <UnorderedListOutlined />),
   // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
 ];
 
 const SiderDemo = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [currentMenuItem, setCurrentMenuItem] = useState('persons');
+  const [currentMenuItem, setCurrentMenuItem] = useState('accounts');
 
   const onCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed);
@@ -51,8 +51,8 @@ const SiderDemo = () => {
 
   const renderContent = () => {
     switch (currentMenuItem) {
-      case 'persons':
-        return <PersonSelection />    
+      case 'accounts':
+        return <AccountSelection />    
       default:
         return null;
     }

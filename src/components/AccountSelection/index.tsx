@@ -2,7 +2,7 @@ import { Collapse, Select } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
-import PersonTable from '../PersonTable';
+import AccountTable from '../AccountTable';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -29,13 +29,13 @@ export default () => {
         defaultActiveKey={['1']}
       >
         <Panel header="Zelt 1" key="1" extra={genExtra()}>
-          <PersonTable />
+          <AccountTable />
         </Panel>
         <Panel header="Zelt 2" key="2" extra={genExtra()}>
-          <PersonTable />
+          <AccountTable />
         </Panel>
         <Panel header="Zelt 3" key="3" extra={genExtra()}>
-          <PersonTable />
+          <AccountTable />
         </Panel>
       </Collapse>
     </>
