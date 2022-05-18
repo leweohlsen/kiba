@@ -70,7 +70,7 @@ const AccountCreationModal = () => {
 
         <Form.Item
           label="Gruppe"
-          name="group"
+          name="groupId"
           rules={[{ required: true, message: "Bitte Gruppe auswählen!" }]}
         >
           <Select
