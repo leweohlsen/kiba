@@ -17,6 +17,8 @@ import {
 import { Group } from "../../app/types";
 import AccountSearchField from "../AccountSearchField";
 
+import "./style.css";
+
 const { Panel } = Collapse;
 const { Option } = Select;
 const { Title } = Typography;
@@ -75,7 +77,12 @@ const AccountSelection = () => {
           />
         </Tooltip>
       </div>
-      <Collapse accordion onChange={handleChange} activeKey={currentGroup}>
+      <Collapse
+        accordion
+        onChange={handleChange}
+        activeKey={currentGroup}
+        className="account-selection-collapse"
+      >
         {groups.map((group: Group) => (
           <Panel header={group.name} key={group.id} extra={genExtra()}>
             <AccountTable
