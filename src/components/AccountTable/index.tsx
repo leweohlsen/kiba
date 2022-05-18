@@ -25,6 +25,7 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
         columns={columns}
         dataSource={accounts}
         pagination={false}
+        rowKey={account => account.id}
       />
     </>
   );

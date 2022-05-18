@@ -79,6 +79,7 @@ const AccountSelection = () => {
         {groups.map((group: Group) => (
           <Panel header={group.name} key={group.id} extra={genExtra()}>
             <AccountTable
+              key={group.id}
               accounts={accounts.filter((a) => a.groupId === group.id)}
             />
           </Panel>

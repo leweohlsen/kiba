@@ -79,7 +79,7 @@ const AccountCreationModal = () => {
             allowClear
           >
             {groups.map((g) => (
-              <Option value={g.id}>{g.name}</Option>
+              <Option key={g.id} value={g.id}>{g.name}</Option>
             ))}
           </Select>
         </Form.Item>
