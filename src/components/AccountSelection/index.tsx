@@ -1,5 +1,9 @@
-import { Collapse, Select } from "antd";
-import { UserAddOutlined } from "@ant-design/icons";
+import { Collapse, Select, Tooltip, Button, Typography } from "antd";
+import {
+  UsergroupDeleteOutlined,
+  UsergroupAddOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 
 import AccountTable from "../AccountTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,9 +15,11 @@ import {
   setIsAccountCreationVisible,
 } from "../../app/ui.slice";
 import { Group } from "../../app/types";
+import AccountSearchField from "../AccountSearchField";
 
 const { Panel } = Collapse;
 const { Option } = Select;
+const { Title } = Typography;
 
 const text = `
   A dog is a type of domesticated animal.
@@ -28,10 +34,10 @@ const AccountSelection = () => {
   const currentGroup = useSelector(selectCurrentGroup);
 
   const genExtra = () => (
-    <UserAddOutlined
+    <UsergroupDeleteOutlined
       onClick={(event) => {
         event.stopPropagation();
-        dispatch(setIsAccountCreationVisible(true));
+        // TODO dispatch();
       }}
     />
   );
@@ -43,6 +49,32 @@ const AccountSelection = () => {
   return (
     <>
       <AccountCreationModal />
+      <div
+        style={{
+          marginBottom: "16px",
+          justifyContent: "flex-end",
+          display: "flex",
+        }}
+      >
+        <AccountSearchField />
+        <Tooltip title="Gruppe erstellen">
+          <Button
+            shape="circle"
+            size="large"
+            icon={<UsergroupAddOutlined style={{ fontSize: "1em" }} />}
+            style={{ marginLeft: "8px" }}
+          />
+        </Tooltip>
+        <Tooltip title="Konto erstellen">
+          <Button
+            shape="circle"
+            size="large"
+            icon={<UserAddOutlined style={{ fontSize: "1em" }} />}
+            style={{ marginLeft: "8px" }}
+            onClick={() => dispatch(setIsAccountCreationVisible(true))}
+          />
+        </Tooltip>
+      </div>
       <Collapse accordion onChange={handleChange} activeKey={currentGroup}>
         {groups.map((group: Group) => (
           <Panel header={group.name} key={group.id} extra={genExtra()}>
