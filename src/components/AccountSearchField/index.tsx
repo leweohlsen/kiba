@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AutoComplete } from "antd";
+import { AutoComplete, Input } from "antd";
 import { selectAccounts } from "../../app/events.slice";
 import { useSelector } from "react-redux";
 
@@ -36,12 +36,13 @@ const Complete: React.FC = () => {
       <AutoComplete
         value={value}
         options={options}
-        style={{ width: 200 }}
+        style={{ width: 300 }}
         onSelect={onSelect}
         onSearch={onSearch}
         onChange={onChange}
-        placeholder="Suche"
-      />
+      >
+        <Input.Search size="large" placeholder="Suche" />
+        </AutoComplete>
     </div>
   );
 };
