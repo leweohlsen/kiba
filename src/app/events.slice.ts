@@ -28,13 +28,16 @@ export const eventSlice = createSlice({
   initialState,
   reducers: {
     addGroup: (state, action: PayloadAction<Group>) => {
-      state.groups[action.payload.id] = action.payload;
+      const id = uuidv4();
+      state.groups[id] = { ...action.payload, id };
     },
     addAccount: (state, action: PayloadAction<Account>) => {
-      state.accounts[action.payload.id] = { ...action.payload, id: uuidv4() };
+      const id = uuidv4();
+      state.accounts[id] = { ...action.payload, id };
     },
     addProduct: (state, action: PayloadAction<Product>) => {
-      state.products[action.payload.id] = action.payload;
+      const id = uuidv4();
+      state.products[id] = { ...action.payload, id };
     },
     checkout: (state, action: PayloadAction<Purchase>) => {
       const buyer = state.accounts[action.payload.buyer_id];
