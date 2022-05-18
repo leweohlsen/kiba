@@ -1,8 +1,16 @@
-import { Collapse, Select } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
-import { useState } from 'react';
+import { Collapse, Select } from "antd";
+import { UserAddOutlined } from "@ant-design/icons";
 
-import AccountTable from '../AccountTable';
+import AccountTable from "../AccountTable";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAccounts, selectGroups } from "../../app/events.slice";
+import AccountCreationModal from "../AccountCreationModal";
+import {
+  selectCurrentGroup,
+  setCurrentGroup,
+  setIsAccountCreationVisible,
+} from "../../app/ui.slice";
+import { Group } from "../../app/types";
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -13,31 +21,39 @@ const text = `
   it can be found as a welcome guest in many households across the world.
 `;
 
-const genExtra = () => (
-  <SettingOutlined
-    onClick={event => {
-      // If you don't want click extra trigger collapse, you can prevent this:
-      event.stopPropagation();
-    }}
-  />
-);
+const AccountSelection = () => {
+  const dispatch = useDispatch();
+  const groups = useSelector(selectGroups);
+  const accounts = useSelector(selectAccounts);
+  const currentGroup = useSelector(selectCurrentGroup);
 
-export default () => {
+  const genExtra = () => (
+    <UserAddOutlined
+      onClick={(event) => {
+        event.stopPropagation();
+        dispatch(setIsAccountCreationVisible(true));
+      }}
+    />
+  );
+
+  const handleChange = (key: string) => {
+    dispatch(setCurrentGroup(key));
+  };
+
   return (
     <>
-      <Collapse
-        defaultActiveKey={['1']}
-      >
-        <Panel header="Zelt 1" key="1" extra={genExtra()}>
-          <AccountTable />
-        </Panel>
-        <Panel header="Zelt 2" key="2" extra={genExtra()}>
-          <AccountTable />
-        </Panel>
-        <Panel header="Zelt 3" key="3" extra={genExtra()}>
-          <AccountTable />
-        </Panel>
+      <AccountCreationModal />
+      <Collapse accordion onChange={handleChange} activeKey={currentGroup}>
+        {groups.map((group: Group) => (
+          <Panel header={group.name} key={group.id} extra={genExtra()}>
+            <AccountTable
+              accounts={accounts.filter((a) => a.groupId === group.id)}
+            />
+          </Panel>
+        ))}
       </Collapse>
     </>
   );
 };
+
+export default AccountSelection;
