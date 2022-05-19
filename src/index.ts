@@ -1,6 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import Store from "electron-store";
 import path from "path";
+import fs from "fs";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type { EventPayload } from "./app/types";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -10,41 +13,16 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
-async function handleGetTransactions() {
-  // const { canceled, filePaths } = await dialog.showOpenDialog();
-  // if (canceled) {
-  //   return;
-  // } else {
-  //   return filePaths[0];
-  // }
-  return [
-    {
-      type: "events/addGroup",
-      payload: { id: "g0", name: "Zelt 1" },
-    },
-    {
-      type: "events/addGroup",
-      payload: { id: "g1", name: "Zelt 2" },
-    },
-    {
-      type: "events/addGroup",
-      payload: { id: "g2", name: "Zelt 3" },
-    },
-    {
-      type: "events/addAccount",
-      payload: { id: "a0", name: "Hein Blöd", balance: 3.57, groupId: "g0" },
-    },
+async function handleSaveTransactions(_, transactions: PayloadAction<EventPayload>[]) {
+  const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
+  await fs.promises.writeFile(transactionsFilePath, JSON.stringify(transactions));
+  return transactions;
+}
 
-    {
-      type: "events/addAccount",
-      payload: {
-        id: "a1",
-        name: "Käptn Blaubär",
-        groupId: "g0",
-        balance: 5410.5,
-      },
-    },
-  ];
+async function handleGetTransactions() {
+  const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
+  const buffer = await fs.promises.readFile(transactionsFilePath);
+  return JSON.parse(buffer.toString());
 }
 
 const createWindow = (): void => {
@@ -58,6 +36,7 @@ const createWindow = (): void => {
   });
 
   ipcMain.handle("getTransactions", handleGetTransactions);
+  ipcMain.handle("saveTransactions", handleSaveTransactions);
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);

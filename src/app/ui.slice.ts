@@ -36,19 +36,12 @@ export const uiSlice = createSlice({
   },
 });
 
-export const {
-  setIsAccountCreationVisible,
-  setIsGroupCreationVisible,
-  setIsTransactionsLoaded,
-  setCurrentGroup,
-} = uiSlice.actions;
+export const { setIsAccountCreationVisible, setIsGroupCreationVisible, setIsTransactionsLoaded, setCurrentGroup } =
+  uiSlice.actions;
 
-export const selectIsAccountCreationVisible = (state: RootState) =>
-  state.ui.isAccountCreationVisible;
-export const selectIsGroupCreationVisible = (state: RootState) =>
-  state.ui.isGroupCreationVisible;
-export const selectIsTransactionsLoaded = (state: RootState) =>
-  state.ui.isTransactionsLoaded;
+export const selectIsAccountCreationVisible = (state: RootState) => state.ui.isAccountCreationVisible;
+export const selectIsGroupCreationVisible = (state: RootState) => state.ui.isGroupCreationVisible;
+export const selectIsTransactionsLoaded = (state: RootState) => state.ui.isTransactionsLoaded;
 export const selectCurrentGroup = (state: RootState) => state.ui.currentGroup;
 
 export default uiSlice.reducer;

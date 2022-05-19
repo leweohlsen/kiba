@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { Group } from "../../app/types";
 import { addGroup } from "../../app/events.slice";
+import { useDispatchAndSaveEvent } from '../App';
 import {
   selectIsGroupCreationVisible,
   setIsGroupCreationVisible,
@@ -18,12 +19,12 @@ import {
 
 const GroupCreationModal = () => {
   const dispatch = useDispatch();
+  const dispatchAndSaveEvent = useDispatchAndSaveEvent();
 
   const isGroupCreationVisible = useSelector(selectIsGroupCreationVisible);
 
   const onFinish = (group: Group) => {
-    dispatch(addGroup({ ...group, id: uuidv4() }));
-    // TODO: dispatch(appendTransaction())
+    dispatchAndSaveEvent(addGroup({ ...group, id: uuidv4() }));
     onClose();
   };
 
