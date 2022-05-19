@@ -1,3 +1,5 @@
+import type { PayloadAction } from "@reduxjs/toolkit";
+
 export type Group = {
     id: string;
     name: string;
@@ -24,3 +26,5 @@ export type Purchase = {
 }
 
 export type EventPayload = Group | Account | Product | Purchase;
+
+export type Transaction = PayloadAction<EventPayload>

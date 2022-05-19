@@ -7,14 +7,31 @@ import { appendTransaction } from "../../app/events.slice";
 import Layout from "../Layout";
 import ReplayTransactions from "../ReplayTransactions";
 
+declare global {
+    interface Window {
+        electronAPI: {
+            appendTransaction: Function;
+            getTransactions: Function;
+        }
+    }
+}
+
 export const useDispatchAndSaveEvent = () => {
     const dispatch = useDispatch();
 
     // dispatch event
-    const dispatchAndAddTransaction = (action: PayloadAction<EventPayload>) => {
-        dispatch(action);
-        dispatch(appendTransaction(action));
+    const dispatchAndAddTransaction = async (action: PayloadAction<EventPayload>) => {
+        try {
+            dispatch(action);
+        } catch (error) {
+            throw error;
+        } finally {
+            dispatch(appendTransaction(action));
+            await window.electronAPI.appendTransaction(action);
+        }
     };
+
+
     // save transaction to redux
 
     // save transactions to main process

@@ -3,7 +3,7 @@ import Store from "electron-store";
 import path from "path";
 import fs from "fs";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { EventPayload } from "./app/types";
+import type { EventPayload, Transaction } from "./app/types";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -13,14 +13,20 @@ if (require("electron-squirrel-startup")) {
   app.quit();
 }
 
-async function handleSaveTransactions(_, transactions: PayloadAction<EventPayload>[]) {
+async function handleAppendTransaction(_, newTransaction: PayloadAction<EventPayload>) {
   const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
+  const buffer = await fs.promises.readFile(transactionsFilePath);
+  const transactions: Transaction[] = JSON.parse(buffer.toString())
+  transactions.push(newTransaction)
   await fs.promises.writeFile(transactionsFilePath, JSON.stringify(transactions));
   return transactions;
 }
 
 async function handleGetTransactions() {
   const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
+  if (!fs.existsSync(transactionsFilePath.toString())) {
+    await fs.promises.writeFile(transactionsFilePath, "[]");
+  }
   const buffer = await fs.promises.readFile(transactionsFilePath);
   return JSON.parse(buffer.toString());
 }
@@ -36,7 +42,7 @@ const createWindow = (): void => {
   });
 
   ipcMain.handle("getTransactions", handleGetTransactions);
-  ipcMain.handle("saveTransactions", handleSaveTransactions);
+  ipcMain.handle("appendTransaction", handleAppendTransaction);
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
