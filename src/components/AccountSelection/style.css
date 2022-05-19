@@ -1,3 +1,7 @@
 .account-selection-collapse .ant-collapse-content-box {
     padding: 0 !important;
 }
+
+.ant-collapse-header {
+    /* color: white !important; */
+}

@@ -2,7 +2,7 @@ import type { AnyAction, PayloadAction } from "@reduxjs/toolkit";
 import reducer, {
   addGroup,
   addProduct,
-  appendEvent,
+  appendTransaction,
   checkout,
 } from "../src/app/events.slice";
 import { addAccount, initialState } from "../src/app/events.slice";
@@ -106,11 +106,11 @@ describe("Event Reducers - Groups, Accounts, Products and Purchases", () => {
     const actionAddProduct = addProduct(product0);
 
     let currentState = reducer(initialState, actionAddGroup);
-    currentState = reducer(currentState, appendEvent(actionAddGroup));
+    currentState = reducer(currentState, appendTransaction(actionAddGroup));
     currentState = reducer(currentState, actionAddAccount);
-    currentState = reducer(currentState, appendEvent(actionAddAccount));
+    currentState = reducer(currentState, appendTransaction(actionAddAccount));
     currentState = reducer(currentState, actionAddProduct);
-    currentState = reducer(currentState, appendEvent(actionAddProduct));
+    currentState = reducer(currentState, appendTransaction(actionAddProduct));
 
     expect(currentState).toEqual({
       groups: { g0: group0 },

@@ -8,6 +8,7 @@ import {
   Select,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { Account } from "../../app/types";
 import { selectGroups, addAccount } from "../../app/events.slice";
 import {
@@ -24,8 +25,8 @@ const AccountCreationModal = () => {
   const groups = useSelector(selectGroups);
 
   const onFinish = (account: Account) => {
-    dispatch(addAccount(account));
-    // TODO: dispatch(appendEvent())
+    dispatch(addAccount({ ...account, id: uuidv4() }));
+    // TODO: dispatch(appendTransaction())
     dispatch(setIsAccountCreationVisible(false));
   };
 
@@ -79,7 +80,9 @@ const AccountCreationModal = () => {
             allowClear
           >
             {groups.map((g) => (
-              <Option key={g.id} value={g.id}>{g.name}</Option>
+              <Option key={g.id} value={g.id}>
+                {g.name}
+              </Option>
             ))}
           </Select>
         </Form.Item>

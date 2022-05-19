@@ -13,11 +13,14 @@ import {
   selectCurrentGroup,
   setCurrentGroup,
   setIsAccountCreationVisible,
+  setIsGroupCreationVisible,
 } from "../../app/ui.slice";
 import { Group } from "../../app/types";
 import AccountSearchField from "../AccountSearchField";
+import { groupsColorPalette } from "../../app/constants";
 
 import "./style.css";
+import GroupCreationModal from "../GroupCreationModal";
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -50,6 +53,7 @@ const AccountSelection = () => {
 
   return (
     <>
+      <GroupCreationModal />
       <AccountCreationModal />
       <div
         style={{
@@ -65,6 +69,7 @@ const AccountSelection = () => {
             size="large"
             icon={<UsergroupAddOutlined style={{ fontSize: "1em" }} />}
             style={{ marginLeft: "8px" }}
+            onClick={() => dispatch(setIsGroupCreationVisible(true))}
           />
         </Tooltip>
         <Tooltip title="Konto erstellen">
@@ -83,8 +88,16 @@ const AccountSelection = () => {
         activeKey={currentGroup}
         className="account-selection-collapse"
       >
-        {groups.map((group: Group) => (
-          <Panel header={group.name} key={group.id} extra={genExtra()}>
+        {groups.map((group: Group, idx) => (
+          <Panel
+            header={group.name}
+            key={group.id}
+            style={{
+              // backgroundColor: groupsColorPalette[idx % groupsColorPalette.length],
+              fontWeight: "bold",
+            }}
+            extra={genExtra()}
+          >
             <AccountTable
               key={group.id}
               accounts={accounts.filter((a) => a.groupId === group.id)}

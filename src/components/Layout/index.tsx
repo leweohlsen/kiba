@@ -1,25 +1,28 @@
-import type { MenuProps } from 'antd';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import { useState } from 'react';
+import type { MenuProps } from "antd";
+import { Layout, Menu, Breadcrumb } from "antd";
+import { useState } from "react";
 import {
   ShopOutlined,
   TeamOutlined,
   FileOutlined,
   UnorderedListOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
-import AccountSelection from '../AccountSelection';
-import './style.css'
+import AccountSelection from "../AccountSelection";
+import "./style.css";
+import { useSelector } from "react-redux";
+import { selectIsTransactionsLoaded } from "../../app/ui.slice";
+import ReplayTransactions from "../ReplayTransactions";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[],
+  children?: MenuItem[]
 ): MenuItem {
   return {
     key,
@@ -30,36 +33,36 @@ function getItem(
 }
 
 const menuItems: MenuItem[] = [
-  getItem('Konten', 'accounts', <TeamOutlined />),
-  getItem('Produkte', 'products', <ShopOutlined />),
-  getItem('Transaktionen', 'events', <UnorderedListOutlined />),
+  getItem("Konten", "accounts", <TeamOutlined />),
+  getItem("Produkte", "products", <ShopOutlined />),
+  getItem("Transaktionen", "events", <UnorderedListOutlined />),
   // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
 ];
 
 const SiderDemo = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [currentMenuItem, setCurrentMenuItem] = useState('accounts');
+  const [currentMenuItem, setCurrentMenuItem] = useState("accounts");
 
   const onCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed);
   };
 
-  const onClick: MenuProps['onClick'] = e => {
-    console.log('click ', e);
+  const onClick: MenuProps["onClick"] = (e) => {
+    console.log("click ", e);
     setCurrentMenuItem(e.key);
   };
 
   const renderContent = () => {
     switch (currentMenuItem) {
-      case 'accounts':
-        return <AccountSelection />    
+      case "accounts":
+        return <AccountSelection />;
       default:
         return null;
     }
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="logo" />
         <Menu
@@ -72,9 +75,7 @@ const SiderDemo = () => {
       </Sider>
       <Layout className="site-layout">
         {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
-        <Content style={{ margin: '16px' }}>
-          {renderContent()}
-        </Content>
+        <Content style={{ margin: "16px" }}>{renderContent()}</Content>
         {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> */}
       </Layout>
     </Layout>
