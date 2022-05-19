@@ -7,6 +7,8 @@ import { appendTransaction } from "../../app/events.slice";
 import Layout from "../Layout";
 import ReplayTransactions from "../ReplayTransactions";
 
+import './style.css';
+
 declare global {
     interface Window {
         electronAPI: {

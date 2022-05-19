@@ -94,7 +94,7 @@ const AccountSelection = () => {
             key={group.id}
             style={{
               // backgroundColor: groupsColorPalette[idx % groupsColorPalette.length],
-              fontWeight: "bold",
+              // fontWeight: "bold",
             }}
             extra={genExtra()}
           >

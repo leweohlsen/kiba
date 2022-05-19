@@ -54,11 +54,11 @@ const SiderDemo = () => {
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+            <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ overflow: 'hidden' }}>
                 <div className="logo" />
                 <Menu theme="dark" selectedKeys={[currentMenuItem]} mode="inline" items={menuItems} onClick={onClick} />
             </Sider>
-            <Layout className="site-layout">
+            <Layout className="site-layout" style={{ overflow: 'scroll', height: '100vh' }}>
                 {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
                 <Content style={{ margin: "16px" }}>{renderContent()}</Content>
                 {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> */}
