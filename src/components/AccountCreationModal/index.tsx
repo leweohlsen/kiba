@@ -15,18 +15,19 @@ import {
   selectIsAccountCreationVisible,
   setIsAccountCreationVisible,
 } from "../../app/ui.slice";
+import { useDispatchAndSaveEvent } from "../App";
 
 const { Option } = Select;
 
 const AccountCreationModal = () => {
   const dispatch = useDispatch();
+  const dispatchAndSaveEvent = useDispatchAndSaveEvent();
 
   const isAccountCreationVisible = useSelector(selectIsAccountCreationVisible);
   const groups = useSelector(selectGroups);
 
   const onFinish = (account: Account) => {
-    dispatch(addAccount({ ...account, id: uuidv4() }));
-    // TODO: dispatch(appendTransaction())
+    dispatchAndSaveEvent(addAccount({ ...account, id: uuidv4() }));
     dispatch(setIsAccountCreationVisible(false));
   };
 

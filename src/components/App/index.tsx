@@ -18,8 +18,6 @@ declare global {
 
 export const useDispatchAndSaveEvent = () => {
     const dispatch = useDispatch();
-
-    // dispatch event
     const dispatchAndAddTransaction = async (action: PayloadAction<EventPayload>) => {
         try {
             dispatch(action);
@@ -30,17 +28,6 @@ export const useDispatchAndSaveEvent = () => {
             await window.electronAPI.appendTransaction(action);
         }
     };
-
-
-    // save transaction to redux
-
-    // save transactions to main process
-    // useEffect(() => {
-    //     fetch(url)
-    //         .then((res) => res.json())
-    //         .then((data) => setData(data));
-    // }, []);
-
     return dispatchAndAddTransaction;
 };
 
