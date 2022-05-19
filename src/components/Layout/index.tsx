@@ -1,18 +1,14 @@
 import type { MenuProps } from "antd";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Menu } from "antd";
 import { useState } from "react";
 import {
   ShopOutlined,
   TeamOutlined,
-  FileOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
 
 import AccountSelection from "../AccountSelection";
 import "./style.css";
-import { useSelector } from "react-redux";
-import { selectIsTransactionsLoaded } from "../../app/ui.slice";
-import ReplayTransactions from "../ReplayTransactions";
 
 const { Header, Content, Footer, Sider } = Layout;
 
