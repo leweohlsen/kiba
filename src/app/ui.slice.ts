@@ -4,44 +4,55 @@ import { Group, Account, Product, Purchase, EventPayload } from "./types";
 import { RootState } from "./store";
 
 export interface UiState {
-  isAccountCreationVisible: boolean;
-  isGroupCreationVisible: boolean;
-  isTransactionsLoaded: boolean;
-  currentGroup: string;
+    isAccountCreationVisible: boolean;
+    isGroupCreationVisible: boolean;
+    isTransactionsLoaded: boolean;
+    currentGroup: string;
+    accountSearchTerm: string;
 }
 
 export const initialState: UiState = {
-  isAccountCreationVisible: false,
-  isGroupCreationVisible: false,
-  isTransactionsLoaded: false,
-  currentGroup: undefined,
+    isAccountCreationVisible: false,
+    isGroupCreationVisible: false,
+    isTransactionsLoaded: false,
+    currentGroup: undefined,
+    accountSearchTerm: "",
 };
 
 export const uiSlice = createSlice({
-  name: "ui",
-  initialState,
-  reducers: {
-    setIsAccountCreationVisible: (state, action: PayloadAction<boolean>) => {
-      state.isAccountCreationVisible = action.payload;
+    name: "ui",
+    initialState,
+    reducers: {
+        setIsAccountCreationVisible: (state, action: PayloadAction<boolean>) => {
+            state.isAccountCreationVisible = action.payload;
+        },
+        setIsGroupCreationVisible: (state, action: PayloadAction<boolean>) => {
+            state.isGroupCreationVisible = action.payload;
+        },
+        setIsTransactionsLoaded: (state, action: PayloadAction<boolean>) => {
+            state.isTransactionsLoaded = action.payload;
+        },
+        setCurrentGroup: (state, action: PayloadAction<string>) => {
+            state.currentGroup = action.payload;
+        },
+        setAccountSearchTerm: (state, action: PayloadAction<string>) => {
+            state.accountSearchTerm = action.payload;
+        },
     },
-    setIsGroupCreationVisible: (state, action: PayloadAction<boolean>) => {
-      state.isGroupCreationVisible = action.payload;
-    },
-    setIsTransactionsLoaded: (state, action: PayloadAction<boolean>) => {
-      state.isTransactionsLoaded = action.payload;
-    },
-    setCurrentGroup: (state, action: PayloadAction<string>) => {
-      state.currentGroup = action.payload;
-    },
-  },
 });
 
-export const { setIsAccountCreationVisible, setIsGroupCreationVisible, setIsTransactionsLoaded, setCurrentGroup } =
-  uiSlice.actions;
+export const {
+    setIsAccountCreationVisible,
+    setIsGroupCreationVisible,
+    setIsTransactionsLoaded,
+    setCurrentGroup,
+    setAccountSearchTerm,
+} = uiSlice.actions;
 
 export const selectIsAccountCreationVisible = (state: RootState) => state.ui.isAccountCreationVisible;
 export const selectIsGroupCreationVisible = (state: RootState) => state.ui.isGroupCreationVisible;
 export const selectIsTransactionsLoaded = (state: RootState) => state.ui.isTransactionsLoaded;
 export const selectCurrentGroup = (state: RootState) => state.ui.currentGroup;
+export const selectAccountSearchTerm = (state: RootState) => state.ui.accountSearchTerm;
 
 export default uiSlice.reducer;

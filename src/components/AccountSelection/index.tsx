@@ -1,19 +1,16 @@
 import { Collapse, Select, Tooltip, Button, Typography } from "antd";
-import {
-  UsergroupDeleteOutlined,
-  UsergroupAddOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
+import { UsergroupDeleteOutlined, UsergroupAddOutlined, UserAddOutlined } from "@ant-design/icons";
 
 import AccountTable from "../AccountTable";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccounts, selectGroups } from "../../app/events.slice";
 import AccountCreationModal from "../AccountCreationModal";
 import {
-  selectCurrentGroup,
-  setCurrentGroup,
-  setIsAccountCreationVisible,
-  setIsGroupCreationVisible,
+    selectAccountSearchTerm,
+    selectCurrentGroup,
+    setCurrentGroup,
+    setIsAccountCreationVisible,
+    setIsGroupCreationVisible,
 } from "../../app/ui.slice";
 import { Group } from "../../app/types";
 import AccountSearchField from "../AccountSearchField";
@@ -33,80 +30,88 @@ const text = `
 `;
 
 const AccountSelection = () => {
-  const dispatch = useDispatch();
-  const groups = useSelector(selectGroups);
-  const accounts = useSelector(selectAccounts);
-  const currentGroup = useSelector(selectCurrentGroup);
+    const dispatch = useDispatch();
+    const groups = useSelector(selectGroups);
+    const accounts = useSelector(selectAccounts);
+    const currentGroup = useSelector(selectCurrentGroup);
+    const accountSearchTerm = useSelector(selectAccountSearchTerm);
 
-  const genExtra = () => (
-    <UsergroupDeleteOutlined
-      onClick={(event) => {
-        event.stopPropagation();
-        // TODO dispatch();
-      }}
-    />
-  );
-
-  const handleChange = (key: string) => {
-    dispatch(setCurrentGroup(key));
-  };
-
-  return (
-    <>
-      <GroupCreationModal />
-      <AccountCreationModal />
-      <div
-        style={{
-          marginBottom: "16px",
-          justifyContent: "flex-end",
-          display: "flex",
-        }}
-      >
-        <AccountSearchField />
-        <Tooltip title="Gruppe erstellen">
-          <Button
-            shape="circle"
-            size="large"
-            icon={<UsergroupAddOutlined style={{ fontSize: "1em" }} />}
-            style={{ marginLeft: "8px" }}
-            onClick={() => dispatch(setIsGroupCreationVisible(true))}
-          />
-        </Tooltip>
-        <Tooltip title="Konto erstellen">
-          <Button
-            shape="circle"
-            size="large"
-            icon={<UserAddOutlined style={{ fontSize: "1em" }} />}
-            style={{ marginLeft: "8px" }}
-            onClick={() => dispatch(setIsAccountCreationVisible(true))}
-          />
-        </Tooltip>
-      </div>
-      <Collapse
-        accordion
-        onChange={handleChange}
-        activeKey={currentGroup}
-        className="account-selection-collapse"
-      >
-        {groups.map((group: Group, idx) => (
-          <Panel
-            header={group.name}
-            key={group.id}
-            style={{
-              // backgroundColor: groupsColorPalette[idx % groupsColorPalette.length],
-              // fontWeight: "bold",
+    const genExtra = () => (
+        <UsergroupDeleteOutlined
+            onClick={(event) => {
+                event.stopPropagation();
+                // TODO dispatch();
             }}
-            extra={genExtra()}
-          >
-            <AccountTable
-              key={group.id}
-              accounts={accounts.filter((a) => a.groupId === group.id)}
-            />
-          </Panel>
-        ))}
-      </Collapse>
-    </>
-  );
+        />
+    );
+
+    const handleChange = (key: string) => {
+        dispatch(setCurrentGroup(key));
+    };
+
+    return (
+        <>
+            <GroupCreationModal />
+            <AccountCreationModal />
+            <div
+                style={{
+                    marginBottom: "16px",
+                    justifyContent: "flex-end",
+                    display: "flex",
+                }}
+            >
+                <AccountSearchField />
+                <Tooltip title="Gruppe erstellen">
+                    <Button
+                        shape="circle"
+                        size="large"
+                        icon={<UsergroupAddOutlined style={{ fontSize: "1em" }} />}
+                        style={{ marginLeft: "8px" }}
+                        onClick={() => dispatch(setIsGroupCreationVisible(true))}
+                    />
+                </Tooltip>
+                <Tooltip title="Konto erstellen">
+                    <Button
+                        shape="circle"
+                        size="large"
+                        icon={<UserAddOutlined style={{ fontSize: "1em" }} />}
+                        style={{ marginLeft: "8px" }}
+                        onClick={() => dispatch(setIsAccountCreationVisible(true))}
+                    />
+                </Tooltip>
+            </div>
+            <Collapse
+                accordion={!accountSearchTerm}
+                onChange={handleChange}
+                activeKey={!accountSearchTerm ? currentGroup : groups.map((g) => g.id)}
+                className="account-selection-collapse"
+            >
+                {groups.map((group: Group, idx) => {
+                    const groupAccounts = accounts
+                        .filter((a) => a.groupId === group.id)
+                        .filter(
+                            (a) => !accountSearchTerm || a.name.toLowerCase().includes(accountSearchTerm.toLowerCase())
+                        );
+                    if (!groupAccounts.length) return null;
+                    return (
+                        <Panel
+                            header={group.name}
+                            key={group.id}
+                            style={
+                                {
+                                    // backgroundColor: groupsColorPalette[idx % groupsColorPalette.length],
+                                    // fontWeight: "bold",
+                                }
+                            }
+                            extra={genExtra()}
+                        >
+                            <AccountTable key={group.id} accounts={groupAccounts} />
+                        </Panel>
+                    );
+                })}
+            </Collapse>
+        </>
+    );
 };
 
 export default AccountSelection;

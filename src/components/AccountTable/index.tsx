@@ -2,33 +2,26 @@ import { Table } from "antd";
 import type { Account } from "../../app/types";
 
 interface AccountTableProps {
-  accounts: Account[];
+    accounts: Account[];
 }
 
 const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
-  const columns = [
-    {
-      key: "name",
-      title: "Name",
-      dataIndex: "name",
-    },
-    {
-      key: "balance",
-      title: "Kontostand",
-      dataIndex: "balance",
-    },
-  ];
+    const columns = [
+        {
+            key: "name",
+            title: "Name",
+            dataIndex: "name",
+        },
+        {
+            key: "balance",
+            title: "Kontostand",
+            dataIndex: "balance",
+        },
+    ];
 
-  return (
-    <>
-      <Table<Account>
-        columns={columns}
-        dataSource={accounts}
-        pagination={false}
-        rowKey={account => account.id}
-      />
-    </>
-  );
+    return (
+        <Table<Account> columns={columns} dataSource={accounts} pagination={false} rowKey={(account) => account.id} />
+    );
 };
 
 export default AccountTable;
