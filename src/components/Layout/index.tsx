@@ -55,7 +55,7 @@ const SiderDemo = () => {
     return (
         <Layout style={{ minHeight: "100vh" }}>
             <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ overflow: 'hidden' }}>
-                <div className="logo" />
+                <div className="logo">🧃</div>
                 <Menu theme="dark" selectedKeys={[currentMenuItem]} mode="inline" items={menuItems} onClick={onClick} />
             </Sider>
             <Layout className="site-layout" style={{ overflow: 'scroll', height: '100vh' }}>

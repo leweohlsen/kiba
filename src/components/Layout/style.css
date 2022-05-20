@@ -7,3 +7,8 @@
 .site-layout .site-layout-background {
     background: #fff;
 }
+
+.logo {
+    text-align: center;
+    font-size: 5em;
+}
