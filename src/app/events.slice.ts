@@ -1,6 +1,6 @@
-import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { createSlice, createSelector, ActionCreator, ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Product, Purchase, EventPayload } from "./types";
+import { Group, Account, Product, Purchase, EventPayload, Transaction } from "./types";
 import { RootState } from "./store";
 
 export interface EventsState {
@@ -46,7 +46,20 @@ export const eventSlice = createSlice({
     },
 });
 
-export const { addGroup, addAccount, addProduct, checkout, appendTransaction, setTransactions } = eventSlice.actions;
+const actionCreatorsWithDates = (actionCreators: Record<string, ActionCreator<any>>) => {
+    return Object.fromEntries(
+        Object.entries(actionCreators).map(([name, action]) => {
+            const actionCreator: ActionCreator<Transaction> = (payload) => ({
+                ...action(payload),
+                timestamp: new Date().getTime(),
+            });
+            return [name, actionCreator];
+        })
+    );
+};
+
+export const { addGroup, addAccount, addProduct, checkout, appendTransaction, setTransactions } =
+    actionCreatorsWithDates(eventSlice.actions);
 
 export const selectAccounts = (state: RootState) => Object.values(state.events.accounts);
 export const selectGroups = (state: RootState) => Object.values(state.events.groups);

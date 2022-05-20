@@ -3,10 +3,10 @@ import eventsReducer from "./events.slice";
 import uiReducer from "./ui.slice";
 
 export const store = configureStore({
-  reducer: {
-    events: eventsReducer,
-    ui: uiReducer,
-  },
+    reducer: {
+        events: eventsReducer,
+        ui: uiReducer,
+    },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
