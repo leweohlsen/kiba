@@ -20,7 +20,12 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
     ];
 
     return (
-        <Table<Account> columns={columns} dataSource={accounts} pagination={false} rowKey={(account) => account.id} />
+        <Table<any>
+            columns={columns}
+            dataSource={accounts.map(a => ({ ...a, balance: a.balance.toFixed(2) }))}
+            pagination={false}
+            rowKey={(account) => account.id}
+        />
     );
 };
 

@@ -1,7 +1,7 @@
 import type { MenuProps } from "antd";
 import { Layout, Menu } from "antd";
 import { useState } from "react";
-import { ShopOutlined, TeamOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { ShopOutlined, TeamOutlined, UnorderedListOutlined, LineChartOutlined } from "@ant-design/icons";
 
 import AccountSelection from "../AccountSelection";
 import TransactionsList from "../TransactionsList";
@@ -25,7 +25,7 @@ const menuItems: MenuItem[] = [
     getItem("Konten", "accounts", <TeamOutlined />),
     getItem("Produkte", "products", <ShopOutlined />),
     getItem("Transaktionen", "transactions", <UnorderedListOutlined />),
-    // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+    getItem("Statistiken", "stats", <LineChartOutlined />),
 ];
 
 const SiderDemo = () => {
@@ -54,14 +54,16 @@ const SiderDemo = () => {
 
     return (
         <Layout style={{ minHeight: "100vh" }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ overflow: 'hidden' }}>
+            <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ overflow: "hidden" }}>
                 <div className="logo">🧃</div>
                 <Menu theme="dark" selectedKeys={[currentMenuItem]} mode="inline" items={menuItems} onClick={onClick} />
             </Sider>
-            <Layout className="site-layout" style={{ overflow: 'scroll', height: '100vh' }}>
+            <Layout className="site-layout">
                 {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
-                <Content style={{ margin: "16px" }}>{renderContent()}</Content>
-                {/* <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer> */}
+                <Content style={{ margin: "16px", overflow: "scroll", height: "calc(100vh - 120px)" }}>
+                    {renderContent()}
+                </Content>
+                {/* <Footer style={{ textAlign: 'center', backgroundColor: 'white', height: '100px' }}></Footer> */}
             </Layout>
         </Layout>
     );
