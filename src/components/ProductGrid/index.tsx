@@ -11,11 +11,10 @@ const { Meta } = Card;
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
 
     return (
-        <Row gutter={[16, 24]}>
+        <Row gutter={[24, 24]}>
             {products.map((product) => (
-                <Col className="gutter-row" span={6}>
+                <Col className="gutter-row" span={4}>
                     <Card
-                        style={{ width: 300 }}
                         cover={
                             <img
                                 alt="example"
