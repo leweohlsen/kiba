@@ -1,11 +1,12 @@
-import { createSlice, createSelector, ActionCreator, ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { createSlice, ActionCreator, } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Product, Purchase, EventPayload, Transaction } from "./types";
+import { Group, Account, Category, Product, Purchase, EventPayload, Transaction } from "./types";
 import { RootState } from "./store";
 
 export interface EventsState {
     groups: Record<string, Group>;
     accounts: Record<string, Account>;
+    categories: Record<string, Category>;
     products: Record<string, Product>;
     transactions: PayloadAction<EventPayload>[];
 }
@@ -13,6 +14,7 @@ export interface EventsState {
 export const initialState: EventsState = {
     groups: {},
     accounts: {},
+    categories: {},
     products: {},
     transactions: [],
 };
@@ -26,6 +28,9 @@ export const eventSlice = createSlice({
         },
         addAccount: (state, action: PayloadAction<Account>) => {
             state.accounts[action.payload.id] = { ...action.payload };
+        },
+        addCategory: (state, action: PayloadAction<Category>) => {
+            state.categories[action.payload.id] = { ...action.payload };
         },
         addProduct: (state, action: PayloadAction<Product>) => {
             state.products[action.payload.id] = { ...action.payload };
@@ -58,11 +63,13 @@ const actionCreatorsWithDates = (actionCreators: Record<string, ActionCreator<an
     );
 };
 
-export const { addGroup, addAccount, addProduct, checkout, appendTransaction, setTransactions } =
+export const { addGroup, addAccount, addCategory, addProduct, checkout, appendTransaction, setTransactions } =
     actionCreatorsWithDates(eventSlice.actions);
 
 export const selectAccounts = (state: RootState) => Object.values(state.events.accounts);
 export const selectGroups = (state: RootState) => Object.values(state.events.groups);
 export const selectTransactions = (state: RootState) => state.events.transactions;
+export const selectCategories = (state: RootState) => Object.values(state.events.categories);
+export const selectProducts = (state: RootState) => Object.values(state.events.products);
 
 export default eventSlice.reducer;

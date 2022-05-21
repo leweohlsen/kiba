@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ShopOutlined, TeamOutlined, UnorderedListOutlined, LineChartOutlined } from "@ant-design/icons";
 
 import AccountSelection from "../AccountSelection";
+import ProductSelection from "../ProductSelection";
 import TransactionsList from "../TransactionsList";
 
 import "./style.css";
@@ -45,6 +46,8 @@ const SiderDemo = () => {
         switch (currentMenuItem) {
             case "accounts":
                 return <AccountSelection />;
+            case "products":
+                return <ProductSelection />;
             case "transactions":
                 return <TransactionsList />;
             default:

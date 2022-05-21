@@ -5,6 +5,11 @@ export type Group = {
     name: string;
 };
 
+export type Category = {
+    id: string;
+    name: string;
+};
+
 export type Account = {
     id: string;
     name: string;
@@ -15,6 +20,7 @@ export type Account = {
 export type Product = {
     id: string;
     name: string;
+    categoryId: string;
     price: number;
 };
 

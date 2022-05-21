@@ -13,7 +13,7 @@ import {
     setIsGroupCreationVisible,
 } from "../../app/ui.slice";
 import { Group } from "../../app/types";
-import AccountSearchField from "../AccountSearchField";
+import SearchField from "../SearchField";
 import { groupsColorPalette } from "../../app/constants";
 
 import "./style.css";
@@ -60,7 +60,7 @@ const AccountSelection = () => {
                     display: "flex",
                 }}
             >
-                <AccountSearchField />
+                <SearchField type={"accounts"} />
                 <Tooltip title="Gruppe erstellen">
                     <Button
                         shape="circle"
