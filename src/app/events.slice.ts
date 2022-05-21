@@ -8,7 +8,7 @@ export interface EventsState {
     accounts: Record<string, Account>;
     categories: Record<string, Category>;
     products: Record<string, Product>;
-    transactions: PayloadAction<EventPayload>[];
+    transactions: Transaction[];
 }
 
 export const initialState: EventsState = {
@@ -42,10 +42,10 @@ export const eventSlice = createSlice({
                 buyer.balance -= product.price;
             });
         },
-        appendTransaction: (state, action: PayloadAction<PayloadAction<EventPayload>>) => {
+        appendTransaction: (state, action: PayloadAction<Transaction>) => {
             state.transactions.push(action.payload);
         },
-        setTransactions: (state, action: PayloadAction<PayloadAction<EventPayload>[]>) => {
+        setTransactions: (state, action: PayloadAction<Transaction[]>) => {
             state.transactions = action.payload;
         },
     },
