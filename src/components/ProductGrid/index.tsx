@@ -7,6 +7,8 @@ import {
     PlusCircleOutlined,
     MinusCircleOutlined,
 } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart, selectShoppingCart } from "../../app/events.slice";
 
 interface ProductGridProps {
     products: Product[];
@@ -15,6 +17,9 @@ interface ProductGridProps {
 const { Meta } = Card;
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+    const dispatch = useDispatch();
+    const shoppingCart = useSelector(selectShoppingCart);
+
     return (
         <Row gutter={[24, 24]}>
             {products.map((product) => (
@@ -23,14 +28,18 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                         cover={
                             <img
                                 alt="example"
-                                style={{maxHeight: 200, width: "auto", margin: "0 auto"}}
+                                style={{ maxHeight: 200, width: "auto", margin: "0 auto" }}
                                 src={"productimage://" + product.image}
                             />
                         }
-                        actions={[<PlusCircleOutlined />, <MinusCircleOutlined />, <EditOutlined key="edit" />]}
+                        actions={[
+                            <PlusCircleOutlined onClick={() => dispatch(addToCart(product.id))} />,
+                            <MinusCircleOutlined onClick={() => dispatch(removeFromCart(product.id))} />,
+                            <EditOutlined key="edit" />,
+                        ]}
                     >
                         <Meta
-                            // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+                            avatar={shoppingCart[product.id] && <Avatar>{shoppingCart[product.id]}x</Avatar>}
                             title={product.name}
                             // description="This is the description"
                         />
