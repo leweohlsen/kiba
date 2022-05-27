@@ -23,7 +23,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                         cover={
                             <img
                                 alt="example"
-                                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                                style={{maxHeight: 200, width: "auto", margin: "0 auto"}}
+                                src={"productimage://" + product.image}
                             />
                         }
                         actions={[<PlusCircleOutlined />, <MinusCircleOutlined />, <EditOutlined key="edit" />]}

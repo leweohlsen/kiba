@@ -22,6 +22,7 @@ export type Product = {
     name: string;
     categoryId: string;
     price: number;
+    image: string;
 };
 
 export type Purchase = {

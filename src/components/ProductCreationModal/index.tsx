@@ -20,7 +20,7 @@ const ProductCreationModal: React.FC = () => {
     const newProductId = uuidv4();
 
     const onFinish = (product: Product) => {
-        dispatchAndSaveEvent(addProduct({ ...product, id: newProductId }));
+        dispatchAndSaveEvent(addProduct({ ...product, id: newProductId, image: newProductImage }));
         dispatch(setIsProductCreationVisible(false));
     };
 
@@ -45,7 +45,7 @@ const ProductCreationModal: React.FC = () => {
                 name="basic"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
-                initialValues={{ remember: true }}
+                initialValues={{ remember: false }}
                 onFinish={onFinish}
                 autoComplete="off"
             >
@@ -59,7 +59,7 @@ const ProductCreationModal: React.FC = () => {
                     >
                         {uploadButton}
                     </Upload> */}
-                    {newProductImage && <img src={"productimage://" + newProductImage} />}
+                    {newProductImage && <img height="200" src={"productimage://" + newProductImage} />}
                     <Button
                         onClick={() => {
                             window.electronAPI.selectProductImage(newProductId);
