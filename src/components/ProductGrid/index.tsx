@@ -1,14 +1,18 @@
 import { Product } from "../../app/types";
-import { Row, Col, Card, Avatar } from "antd";
+import { Row, Col, Card, Avatar, InputNumber, Typography, Badge } from "antd";
 import {
     EditOutlined,
     EllipsisOutlined,
     SettingOutlined,
-    PlusCircleOutlined,
-    MinusCircleOutlined,
+    PlusCircleTwoTone,
+    MinusCircleTwoTone,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart, selectShoppingCart } from "../../app/events.slice";
+
+import "./style.css";
+
+const { Title } = Typography;
 
 interface ProductGridProps {
     products: Product[];
@@ -24,26 +28,32 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         <Row gutter={[24, 24]}>
             {products.map((product) => (
                 <Col className="gutter-row" span={4}>
-                    <Card
-                        cover={
-                            <img
-                                alt="example"
-                                style={{ maxHeight: 200, width: "auto", margin: "0 auto" }}
-                                src={"productimage://" + product.image}
+                    <Badge count={shoppingCart[product.id] || 0}>
+                        <Card
+                            cover={
+                                <img
+                                    alt="example"
+                                    style={{ maxHeight: 200, width: "auto", margin: "0 auto" }}
+                                    src={"productimage://" + product.image}
+                                />
+                            }
+                            actions={[
+                                <PlusCircleTwoTone onClick={() => dispatch(addToCart(product.id))} />,
+                                <MinusCircleTwoTone onClick={() => dispatch(removeFromCart(product.id))} />,
+                                <EditOutlined key="edit" />,
+                            ]}
+                        >
+                            <Meta
+                                className="product-meta"
+                                title={
+                                    <Title className="product-title" level={5}>
+                                        {product.name}
+                                    </Title>
+                                }
+                                description={`${product.price.toFixed(2)} €`}
                             />
-                        }
-                        actions={[
-                            <PlusCircleOutlined onClick={() => dispatch(addToCart(product.id))} />,
-                            <MinusCircleOutlined onClick={() => dispatch(removeFromCart(product.id))} />,
-                            <EditOutlined key="edit" />,
-                        ]}
-                    >
-                        <Meta
-                            avatar={shoppingCart[product.id] && <Avatar>{shoppingCart[product.id]}x</Avatar>}
-                            title={product.name}
-                            // description="This is the description"
-                        />
-                    </Card>
+                        </Card>
+                    </Badge>
                 </Col>
             ))}
         </Row>
