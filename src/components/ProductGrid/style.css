@@ -10,6 +10,11 @@ input[type="number"] {
     -moz-appearance: textfield!important;
 }
 
+.product-card {
+    cursor: pointer;
+    user-select: none;
+}
+
 .product-title {
     word-wrap: normal;
 }

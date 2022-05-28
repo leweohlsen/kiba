@@ -10,6 +10,7 @@ export interface EventsState {
     products: Record<string, Product>;
     transactions: Transaction[];
     shoppingCart: Record<string, number>;
+    customerId: string;
 }
 
 export const initialState: EventsState = {
@@ -19,6 +20,7 @@ export const initialState: EventsState = {
     products: {},
     transactions: [],
     shoppingCart: {},
+    customerId: undefined,
 };
 
 export const eventSlice = createSlice({
@@ -61,6 +63,9 @@ export const eventSlice = createSlice({
         setTransactions: (state, action: PayloadAction<Transaction[]>) => {
             state.transactions = action.payload;
         },
+        setCustomerId: (state, action: PayloadAction<string>) => {
+            state.customerId = action.payload;
+        },
     },
 });
 
@@ -86,6 +91,7 @@ export const {
     setTransactions,
     addToCart,
     removeFromCart,
+    setCustomerId,
 } = actionCreatorsWithDates(eventSlice.actions);
 
 export const selectAccounts = (state: RootState) => Object.values(state.events.accounts);
@@ -94,5 +100,6 @@ export const selectTransactions = (state: RootState) => state.events.transaction
 export const selectCategories = (state: RootState) => Object.values(state.events.categories);
 export const selectProducts = (state: RootState) => Object.values(state.events.products);
 export const selectShoppingCart = (state: RootState) => state.events.shoppingCart;
+export const selectCustomerId = (state: RootState) => state.events.customerId;
 
 export default eventSlice.reducer;

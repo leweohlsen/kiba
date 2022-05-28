@@ -1,11 +1,16 @@
 import { Table } from "antd";
+import { useDispatch } from "react-redux";
+import { setCustomerId } from "../../app/events.slice";
 import type { Account } from "../../app/types";
+
+import "./style.css";
 
 interface AccountTableProps {
     accounts: Account[];
 }
 
 const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
+    const dispatch = useDispatch();
     const columns = [
         {
             key: "name",
@@ -16,15 +21,24 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
             key: "balance",
             title: "Kontostand",
             dataIndex: "balance",
+            render: (value: number) => value.toFixed(2),
         },
     ];
 
     return (
-        <Table<any>
+        <Table<Account>
+            className="accounts-table"
             columns={columns}
-            dataSource={accounts.map(a => ({ ...a, balance: a.balance.toFixed(2) }))}
+            dataSource={accounts}
             pagination={false}
             rowKey={(account) => account.id}
+            onRow={(record) => {
+                return {
+                    onClick: () => {
+                        dispatch(setCustomerId(record.id));
+                    },
+                };
+            }}
         />
     );
 };

@@ -30,6 +30,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                 <Col className="gutter-row" span={4}>
                     <Badge count={shoppingCart[product.id] || 0}>
                         <Card
+                            className="product-card"
+                            onClick={() => {
+                                dispatch(addToCart(product.id));
+                            }}
                             cover={
                                 <img
                                     alt="example"
@@ -38,8 +42,18 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                                 />
                             }
                             actions={[
-                                <PlusCircleTwoTone onClick={() => dispatch(addToCart(product.id))} />,
-                                <MinusCircleTwoTone onClick={() => dispatch(removeFromCart(product.id))} />,
+                                <PlusCircleTwoTone
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        dispatch(addToCart(product.id));
+                                    }}
+                                />,
+                                <MinusCircleTwoTone
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        dispatch(removeFromCart(product.id));
+                                    }}
+                                />,
                                 <EditOutlined key="edit" />,
                             ]}
                         >

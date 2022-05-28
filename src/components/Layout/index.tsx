@@ -8,6 +8,7 @@ import ProductSelection from "../ProductSelection";
 import TransactionsList from "../TransactionsList";
 
 import "./style.css";
+import CheckoutFooter from "../CheckoutFooter";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -66,7 +67,9 @@ const SiderDemo = () => {
                 <Content style={{ margin: "16px", overflow: "scroll", height: "calc(100vh - 120px)" }}>
                     {renderContent()}
                 </Content>
-                {/* <Footer style={{ textAlign: 'center', backgroundColor: 'white', height: '100px' }}></Footer> */}
+                <Footer style={{ backgroundColor: 'white', height: '100px' }}>
+                    <CheckoutFooter />
+                </Footer>
             </Layout>
         </Layout>
     );
