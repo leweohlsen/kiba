@@ -1,5 +1,6 @@
 import { Table } from "antd";
 import { useDispatch } from "react-redux";
+import { setCurrentMenuItem } from "../../app/ui.slice";
 import { setCustomerId } from "../../app/events.slice";
 import type { Account } from "../../app/types";
 
@@ -36,6 +37,7 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
                 return {
                     onClick: () => {
                         dispatch(setCustomerId(record.id));
+                        dispatch(setCurrentMenuItem("products"));
                     },
                 };
             }}

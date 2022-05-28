@@ -9,6 +9,8 @@ import TransactionsList from "../TransactionsList";
 
 import "./style.css";
 import CheckoutFooter from "../CheckoutFooter";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentMenuItem, setCurrentMenuItem } from "../../app/ui.slice";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -32,7 +34,9 @@ const menuItems: MenuItem[] = [
 
 const SiderDemo = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const [currentMenuItem, setCurrentMenuItem] = useState("accounts");
+    const currentMenuItem = useSelector(selectCurrentMenuItem);
+
+    const dispatch = useDispatch();
 
     const onCollapse = (collapsed: boolean) => {
         setCollapsed(collapsed);
@@ -40,7 +44,7 @@ const SiderDemo = () => {
 
     const onClick: MenuProps["onClick"] = (e) => {
         console.log("click ", e);
-        setCurrentMenuItem(e.key);
+        dispatch(setCurrentMenuItem(e.key));
     };
 
     const renderContent = () => {

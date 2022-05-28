@@ -1,4 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
+import type { MenuProps } from "antd";
 
 export type Group = {
     id: string;
@@ -27,9 +28,9 @@ export type Product = {
 
 export type Purchase = {
     id: string;
-    buyer_id: string;
-    custom_price?: number;
-    product_ids: string[];
+    customerId: string;
+    customPrice?: number;
+    shoppingCart: Record<string, number>;
 };
 
 export type EventPayload = Group | Account | Product | Purchase;

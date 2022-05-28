@@ -83,6 +83,7 @@ const ProductSelection = () => {
             <Collapse
                 // onChange={handleChange}
                 // activeKey={!productSearchTerm ? currentGroup : groups.map((g) => g.id)}
+                defaultActiveKey={categories.map(c => c.id)}
                 className="product-selection-collapse"
             >
                 {categories.map((category: Category, idx) => {

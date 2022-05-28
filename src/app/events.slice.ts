@@ -40,11 +40,13 @@ export const eventSlice = createSlice({
             state.products[action.payload.id] = { ...action.payload };
         },
         checkout: (state, action: PayloadAction<Purchase>) => {
-            const buyer = state.accounts[action.payload.buyer_id];
-            action.payload.product_ids.forEach((product_id) => {
-                const product = state.products[product_id];
-                buyer.balance -= product.price;
+            const buyer = state.accounts[action.payload.customerId];
+            Object.entries(action.payload.shoppingCart).forEach(([productId, quantity]) => {
+                const product = state.products[productId];
+                buyer.balance -= product.price * quantity;
             });
+            state.shoppingCart = initialState.shoppingCart;
+            state.customerId = initialState.customerId;
         },
         addToCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) {

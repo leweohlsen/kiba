@@ -35,7 +35,7 @@ describe("Event Reducers - Groups, Accounts, Products and Purchases", () => {
     balance: 150.0,
   };
 
-  const cart0 = { id: "c0", buyer_id: "a0", product_ids: ["p0", "p1"] };
+  const cart0 = { id: "c0", customerId: "a0", product_ids: ["p0", "p1"] };
 
   it("should return the initial state", () => {
     expect(reducer(undefined, {} as AnyAction)).toEqual(initialState);
@@ -190,8 +190,8 @@ describe("Replaying events", () => {
       type: "CREATE_TRANSACTION",
       payload: {
         id: "t0",
-        buyer_id: "a1",
-        custom_price: null,
+        customerId: "a1",
+        customPrice: null,
         product_ids: ["p0", "p1", "p4", "p3"],
       },
     },
@@ -199,8 +199,8 @@ describe("Replaying events", () => {
       type: "CREATE_TRANSACTION",
       payload: {
         id: "t1",
-        buyer_id: "a0",
-        custom_price: null,
+        customerId: "a0",
+        customPrice: null,
         product_ids: ["p4", "p0", "p4"],
       },
     },
@@ -208,8 +208,8 @@ describe("Replaying events", () => {
       type: "CREATE_TRANSACTION",
       payload: {
         id: "t2",
-        buyer_id: "a2",
-        custom_price: 0.3,
+        customerId: "a2",
+        customPrice: 0.3,
         product_ids: ["p0"],
       },
     },
@@ -224,8 +224,8 @@ describe("Replaying events", () => {
       type: "CREATE_TRANSACTION",
       payload: {
         id: "t3",
-        buyer_id: "a4",
-        custom_price: null,
+        customerId: "a4",
+        customPrice: null,
         product_ids: ["p3", "p3", "p3", "p3", "p3"],
       },
     },

@@ -10,6 +10,7 @@ export interface UiState {
     isProductCreationVisible: boolean;
     isTransactionsLoaded: boolean;
     currentGroup: string;
+    currentMenuItem: string;
     newProductImage: string;
     accountSearchTerm: string;
     productSearchTerm: string;
@@ -22,6 +23,7 @@ export const initialState: UiState = {
     isProductCreationVisible: false,
     isTransactionsLoaded: false,
     currentGroup: undefined,
+    currentMenuItem: "accounts",
     newProductImage: undefined,
     accountSearchTerm: "",
     productSearchTerm: "",
@@ -49,6 +51,9 @@ export const uiSlice = createSlice({
         setCurrentGroup: (state, action: PayloadAction<string>) => {
             state.currentGroup = action.payload;
         },
+        setCurrentMenuItem: (state, action: PayloadAction<string>) => {
+            state.currentMenuItem = action.payload;
+        },
         setNewProductImage: (state, action: PayloadAction<string>) => {
             state.newProductImage = action.payload;
         },
@@ -68,6 +73,7 @@ export const {
     setIsProductCreationVisible,
     setIsTransactionsLoaded,
     setCurrentGroup,
+    setCurrentMenuItem,
     setNewProductImage,
     setAccountSearchTerm,
     setProductSearchTerm,
@@ -79,6 +85,7 @@ export const selectIsCategoryCreationVisible = (state: RootState) => state.ui.is
 export const selectIsProductCreationVisible = (state: RootState) => state.ui.isProductCreationVisible;
 export const selectIsTransactionsLoaded = (state: RootState) => state.ui.isTransactionsLoaded;
 export const selectCurrentGroup = (state: RootState) => state.ui.currentGroup;
+export const selectCurrentMenuItem = (state: RootState) => state.ui.currentMenuItem;
 export const selectNewProductImage = (state: RootState) => state.ui.newProductImage;
 export const selectAccountSearchTerm = (state: RootState) => state.ui.accountSearchTerm;
 export const selectProductSearchTerm = (state: RootState) => state.ui.productSearchTerm;
