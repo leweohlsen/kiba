@@ -1,6 +1,6 @@
 import { createSlice, ActionCreator } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Category, Product, Purchase, EventPayload, Transaction } from "./types";
+import { Group, Account, Category, Product, Purchase, Transaction } from "./types";
 import { RootState } from "./store";
 
 export interface EventsState {
@@ -8,7 +8,7 @@ export interface EventsState {
     accounts: Record<string, Account>;
     categories: Record<string, Category>;
     products: Record<string, Product>;
-    transactions: Transaction[];
+    transactions: Transaction<any>[];
     shoppingCart: Record<string, number>;
     customerId: string;
 }
@@ -59,10 +59,10 @@ export const eventSlice = createSlice({
             if (!state.shoppingCart[action.payload]) return;
             state.shoppingCart[action.payload] -= 1;
         },
-        appendTransaction: (state, action: PayloadAction<Transaction>) => {
+        appendTransaction: (state, action: PayloadAction<Transaction<any>>) => {
             state.transactions.push(action.payload);
         },
-        setTransactions: (state, action: PayloadAction<Transaction[]>) => {
+        setTransactions: (state, action: PayloadAction<Transaction<any>[]>) => {
             state.transactions = action.payload;
         },
         setCustomerId: (state, action: PayloadAction<string>) => {
@@ -74,7 +74,7 @@ export const eventSlice = createSlice({
 const actionCreatorsWithDates = (actionCreators: Record<string, ActionCreator<any>>) => {
     return Object.fromEntries(
         Object.entries(actionCreators).map(([name, action]) => {
-            const actionCreator: ActionCreator<Transaction> = (payload) => ({
+            const actionCreator: ActionCreator<Transaction<any>> = (payload) => ({
                 ...action(payload),
                 timestamp: new Date().getTime(),
             });

@@ -1,5 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { EventPayload, Product, Transaction } from "../../app/types";
+import type { Product, Transaction } from "../../app/types";
 import { useSelector, useStore, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { selectIsTransactionsLoaded, setNewProductImage } from "../../app/ui.slice";
@@ -12,7 +12,7 @@ import "./style.css";
 declare global {
     interface Window {
         electronAPI: {
-            appendTransaction: (t: Transaction) => void;
+            appendTransaction: (t: Transaction<any>) => void;
             getTransactions: () => void;
             selectProductImage: (productId: string) => void;
             updateProductImage: (channel: string, func: (event: string, data: string) => void) => void;
@@ -22,7 +22,7 @@ declare global {
 
 export const useDispatchAndSaveEvent = () => {
     const dispatch = useDispatch();
-    const dispatchAndAddTransaction = async (action: Transaction) => {
+    const dispatchAndAddTransaction = async (action: Transaction<any>) => {
         try {
             dispatch(action);
         } finally {

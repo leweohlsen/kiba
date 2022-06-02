@@ -40,7 +40,7 @@ const CheckoutFooter: React.FC = () => {
                 {Object.keys(shoppingCart).length > 0 && (
                     <>
                         <Text style={{ marginRight: "16px" }}>kauft</Text>
-                        <ShoppingCart />
+                        <ShoppingCart items={shoppingCart} />
                     </>
                 )}
             </Col>

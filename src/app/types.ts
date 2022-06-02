@@ -33,8 +33,6 @@ export type Purchase = {
     shoppingCart: Record<string, number>;
 };
 
-export type EventPayload = Group | Account | Product | Purchase;
-
-export interface Transaction extends PayloadAction<EventPayload> {
+export interface Transaction<P> extends PayloadAction<P> {
     timestamp: number;
 }

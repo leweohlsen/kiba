@@ -3,8 +3,11 @@ import { UserOutlined, AntDesignOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { selectShoppingCart, selectProducts } from "../../app/events.slice";
 
-const ShoppingCart: React.FC = () => {
-    const shoppingCart = useSelector(selectShoppingCart);
+interface ShoppingCartProps {
+    items: Record<string, number>;
+}
+
+const ShoppingCart: React.FC<ShoppingCartProps> = ({ items }) => {
     const products = useSelector(selectProducts);
     return (
         <Avatar.Group
@@ -13,7 +16,7 @@ const ShoppingCart: React.FC = () => {
             size="large"
             maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf", marginLeft: "0px" }}
         >
-            {Object.entries(shoppingCart).map(([productId, quantity]) => {
+            {Object.entries(items).map(([productId, quantity]) => {
                 if (!quantity) return null;
                 const product = products.find((p) => p.id === productId);
                 return (

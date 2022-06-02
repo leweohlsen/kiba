@@ -1,5 +1,5 @@
 import { Collapse, Select, Tooltip, Button, Typography } from "antd";
-import { FolderAddOutlined, FileAddOutlined, UserAddOutlined } from "@ant-design/icons";
+import { FolderAddOutlined, FileAddOutlined } from "@ant-design/icons";
 
 import ProductGrid from "../ProductGrid";
 import { useDispatch, useSelector } from "react-redux";

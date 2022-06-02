@@ -1,6 +1,6 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Product, Purchase, EventPayload } from "./types";
+import { Group, Account, Product, Purchase } from "./types";
 import { RootState } from "./store";
 
 export interface UiState {

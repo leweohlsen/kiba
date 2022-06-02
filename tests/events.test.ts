@@ -6,7 +6,7 @@ import reducer, {
   checkout,
 } from "../src/app/events.slice";
 import { addAccount, initialState } from "../src/app/events.slice";
-import { Account, EventPayload, Product } from "../src/app/types";
+import { Account, Product } from "../src/app/types";
 
 const events1 = [
   { type: "CREATE_GROUP", payload: { id: "g2", name: "Schiff" } },
