@@ -5,6 +5,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getTransactions: () => ipcRenderer.invoke("getTransactions"),
   selectProductImage: (productId) => ipcRenderer.send("selectProductImage", productId),
   updateProductImage: (channel, func) => {
-    ipcRenderer.once(channel, func);
+    ipcRenderer.on(channel, func);
   }
 });
