@@ -43,14 +43,14 @@ export const eventSlice = createSlice({
         },
         checkout: (state, action: PayloadAction<Purchase>) => {
             const buyer = state.accounts[action.payload.customerId];
-            Object.entries(action.payload.shoppingCart).forEach(([productId, quantity]) => {
-                const product = state.products[productId];
-                if (action.payload.customPrice) {
-                    buyer.balance -= action.payload.customPrice;
-                } else {
+            if (action.payload.customPrice) {
+                buyer.balance -= action.payload.customPrice;
+            } else {
+                Object.entries(action.payload.shoppingCart).forEach(([productId, quantity]) => {
+                    const product = state.products[productId];
                     buyer.balance -= product.price * quantity;
-                }
-            });
+                });
+            }
             state.shoppingCart = initialState.shoppingCart;
             state.customerId = initialState.customerId;
             state.customPrice = undefined;
