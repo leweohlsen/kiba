@@ -56,12 +56,12 @@ const CheckoutFooter: React.FC = () => {
                 <Col span={16} style={{ paddingLeft: "10px" }}>
                     <Text
                         editable={{
-                            tooltip: "click to edit text",
+                            tooltip: "Sonderpreis eingeben",
                             onChange: (customPrice: string) => {
                                 dispatch(setCustomPrice(parseFloat(customPrice)));
                             },
                         }}
-                        style={{ fontSize: "32px" }}
+                        style={{ fontSize: "24px" }}
                     >
                         {price.toFixed(2)}€
                     </Text>
