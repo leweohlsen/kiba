@@ -48,6 +48,12 @@ export const eventSlice = createSlice({
             state.shoppingCart = initialState.shoppingCart;
             state.customerId = initialState.customerId;
         },
+        editGroup: (state, action: PayloadAction<Group>) => {
+            state.groups[action.payload.id] = {
+                ...state.groups[action.payload.id],
+                ...action.payload,
+            }
+        },
         addToCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) {
                 state.shoppingCart[action.payload] = 1;
@@ -93,6 +99,7 @@ export const {
     addCategory,
     addProduct,
     checkout,
+    editGroup,
     appendTransaction,
     setTransactions,
     addToCart,

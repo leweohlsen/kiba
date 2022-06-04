@@ -1,5 +1,5 @@
 import { Collapse, Select, Tooltip, Button, Typography } from "antd";
-import { UsergroupDeleteOutlined, UsergroupAddOutlined, UserAddOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 
 import AccountTable from "../AccountTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import {
     setCurrentGroup,
     setIsAccountCreationVisible,
     setIsGroupCreationVisible,
+    setItemBeingEditedId,
 } from "../../app/ui.slice";
 import { Group } from "../../app/types";
 import SearchField from "../SearchField";
@@ -29,15 +30,6 @@ const AccountSelection = () => {
     const accounts = useSelector(selectAccounts);
     const currentGroup = useSelector(selectCurrentGroup);
     const accountSearchTerm = useSelector(selectAccountSearchTerm);
-
-    const genExtra = () => (
-        <UsergroupDeleteOutlined
-            onClick={(event) => {
-                event.stopPropagation();
-                // TODO dispatch();
-            }}
-        />
-    );
 
     const handleChange = (key: string) => {
         dispatch(setCurrentGroup(key));
@@ -64,13 +56,15 @@ const AccountSelection = () => {
                         <Panel
                             header={group.name}
                             key={group.id}
-                            style={
-                                {
-                                    // backgroundColor: groupsColorPalette[idx % groupsColorPalette.length],
-                                    // fontWeight: "bold",
-                                }
+                            extra={
+                                <EditOutlined
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        dispatch(setIsGroupCreationVisible(true));
+                                        dispatch(setItemBeingEditedId(group.id));
+                                    }}
+                                />
                             }
-                            extra={genExtra()}
                         >
                             <AccountTable key={group.id} accounts={groupAccounts} />
                         </Panel>

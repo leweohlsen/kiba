@@ -11,6 +11,7 @@ export interface UiState {
     isTransactionsLoaded: boolean;
     currentGroup: string;
     currentMenuItem: string;
+    itemBeingEditedId: string;
     newProductImage: string;
     accountSearchTerm: string;
     productSearchTerm: string;
@@ -24,6 +25,7 @@ export const initialState: UiState = {
     isTransactionsLoaded: false,
     currentGroup: undefined,
     currentMenuItem: "accounts",
+    itemBeingEditedId: undefined,
     newProductImage: undefined,
     accountSearchTerm: "",
     productSearchTerm: "",
@@ -54,6 +56,9 @@ export const uiSlice = createSlice({
         setCurrentMenuItem: (state, action: PayloadAction<string>) => {
             state.currentMenuItem = action.payload;
         },
+        setItemBeingEditedId: (state, action: PayloadAction<string>) => {
+            state.itemBeingEditedId = action.payload;
+        },
         setNewProductImage: (state, action: PayloadAction<string>) => {
             state.newProductImage = action.payload;
         },
@@ -74,6 +79,7 @@ export const {
     setIsTransactionsLoaded,
     setCurrentGroup,
     setCurrentMenuItem,
+    setItemBeingEditedId,
     setNewProductImage,
     setAccountSearchTerm,
     setProductSearchTerm,
@@ -86,6 +92,7 @@ export const selectIsProductCreationVisible = (state: RootState) => state.ui.isP
 export const selectIsTransactionsLoaded = (state: RootState) => state.ui.isTransactionsLoaded;
 export const selectCurrentGroup = (state: RootState) => state.ui.currentGroup;
 export const selectCurrentMenuItem = (state: RootState) => state.ui.currentMenuItem;
+export const selectItemBeingEditedId = (state: RootState) => state.ui.itemBeingEditedId;
 export const selectNewProductImage = (state: RootState) => state.ui.newProductImage;
 export const selectAccountSearchTerm = (state: RootState) => state.ui.accountSearchTerm;
 export const selectProductSearchTerm = (state: RootState) => state.ui.productSearchTerm;
