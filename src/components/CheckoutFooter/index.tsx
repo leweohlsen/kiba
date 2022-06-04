@@ -58,7 +58,7 @@ const CheckoutFooter: React.FC = () => {
                         editable={{
                             tooltip: "click to edit text",
                             onChange: (customPrice: string) => {
-                                dispatch(setCustomPrice(Number(customPrice)));
+                                dispatch(setCustomPrice(parseFloat(customPrice)));
                             },
                         }}
                         style={{ fontSize: "32px" }}
