@@ -68,10 +68,10 @@ const SiderDemo = () => {
             </Sider>
             <Layout className="site-layout">
                 {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
-                <Content style={{ margin: "16px", overflow: "scroll", height: "calc(100vh - 120px)" }}>
+                <Content style={{ margin: "16px", overflow: "auto", height: "calc(100vh - 120px)" }}>
                     {renderContent()}
                 </Content>
-                <Footer style={{ backgroundColor: 'white', height: '100px' }}>
+                <Footer style={{ backgroundColor: "white", height: "100px", padding: 0 }}>
                     <CheckoutFooter />
                 </Footer>
             </Layout>

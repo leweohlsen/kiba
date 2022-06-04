@@ -41,7 +41,9 @@ const TransactionsList: React.FC = () => {
                 <span style={{ marginRight: "10px" }}>
                     {customer.name} ({group.name}) mit Kontostand {customer.balance.toFixed(2)}€ kauft
                 </span>
-                <ShoppingCart items={t.payload.shoppingCart} />
+                <div style={{ padding: "10px" }}>
+                    <ShoppingCart items={t.payload.shoppingCart} />
+                </div>
             </div>
         );
     };

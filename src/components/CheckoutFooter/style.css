@@ -1,0 +1,19 @@
+.checkout-footer {
+    height: 100px;
+}
+
+.checkout-footer .ant-segmented-item-label {
+    height: 100%;
+}
+
+.checkout-footer .ant-col {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    text-align: left;
+}
+
+.checkout-footer .anticon {
+    font-size: 2em;
+}

@@ -44,6 +44,7 @@ async function handleSelectProductImage(event: IpcMainEvent, productId: string) 
     }
     const targetFilePath = path.join(productImageDir, targetFileName);
     await fs.promises.copyFile(filePath, targetFilePath);
+    console.log(`Created product image file ${targetFilePath}`)
     event.reply("updateProductImage", targetFileName);
 }
 
