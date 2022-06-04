@@ -57,7 +57,11 @@ export const eventSlice = createSlice({
         },
         removeFromCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) return;
-            state.shoppingCart[action.payload] -= 1;
+            if (state.shoppingCart[action.payload] === 1) {
+                delete state.shoppingCart[action.payload];
+            } else {
+                state.shoppingCart[action.payload] -= 1;
+            }
         },
         appendTransaction: (state, action: PayloadAction<Transaction<any>>) => {
             state.transactions.push(action.payload);

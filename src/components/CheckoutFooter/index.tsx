@@ -37,11 +37,14 @@ const CheckoutFooter: React.FC = () => {
     const renderTotalCheckout = (customerId: string, currentTotal: number, shoppingCart: Record<string, number>) => {
         if (!customerId) return;
         const account = accounts.find((a) => a.id === customerId);
+        const balanceAfterCheckout = account.balance - currentTotal;
         return (
             <Row gutter={16} style={{ height: "100%" }}>
-                <Col span={16} style={{paddingLeft: "10px"}}>
-                    <Text style={{ fontSize: "32px", fontWeight: "bold" }}>{currentTotal.toFixed(2)}€</Text>
-                    <Text>Kontostand danach: {(account.balance - currentTotal).toFixed(2)}€</Text>
+                <Col span={16} style={{ paddingLeft: "10px" }}>
+                    <Text style={{ fontSize: "32px" }}>{currentTotal.toFixed(2)}€</Text>
+                    <Text style={{ color: balanceAfterCheckout < 0 ? "red" : "black" }}>
+                        Kontostand danach: {balanceAfterCheckout.toFixed(2)}€
+                    </Text>
                 </Col>
                 <Col span={8}>
                     <Button
