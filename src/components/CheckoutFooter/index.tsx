@@ -1,9 +1,17 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Button, Typography, Segmented } from "antd";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
 import { selectCurrentTotal } from "../../app/selectors";
-import { checkout, selectAccounts, selectCustomerId, selectGroups, selectShoppingCart } from "../../app/events.slice";
+import {
+    checkout,
+    selectAccounts,
+    selectCustomerId,
+    selectCustomPrice,
+    selectGroups,
+    selectShoppingCart,
+    setCustomPrice,
+} from "../../app/events.slice";
 import ShoppingCart from "../ShoppingCart";
 import { useDispatchAndSaveEvent } from "../App";
 
@@ -14,22 +22,25 @@ const { Text, Title } = Typography;
 
 const CheckoutFooter: React.FC = () => {
     const currentTotal = useSelector(selectCurrentTotal);
+    const customPrice = useSelector(selectCustomPrice);
     const customerId = useSelector(selectCustomerId);
     const accounts = useSelector(selectAccounts);
     const groups = useSelector(selectGroups);
     const shoppingCart = useSelector(selectShoppingCart);
     const currentMenuItem = useSelector(selectCurrentMenuItem);
 
+    const dispatch = useDispatch();
     const dispatchAndSaveEvent = useDispatchAndSaveEvent();
 
-    const renderSelectedAccount = (customerId: string) => {
+    const renderBuyerAccountInfo = (customerId: string) => {
         if (!customerId) return;
         const account = accounts.find((a) => a.id === customerId);
         return (
             <>
                 <Title level={5} style={{ marginBottom: 0 }}>
-                    {account.name} ({groups.find((g) => g.id === account.groupId).name})
+                    {account.name}
                 </Title>
+                <Text>{groups.find((g) => g.id === account.groupId).name}</Text>
                 <Text>Kontostand: {account.balance.toFixed(2)}€</Text>
             </>
         );
@@ -38,11 +49,22 @@ const CheckoutFooter: React.FC = () => {
     const renderTotalCheckout = (customerId: string, currentTotal: number, shoppingCart: Record<string, number>) => {
         if (!customerId) return;
         const account = accounts.find((a) => a.id === customerId);
-        const balanceAfterCheckout = account.balance - currentTotal;
+        const price = customPrice ? customPrice : currentTotal;
+        const balanceAfterCheckout = account.balance - price;
         return (
-            <Row gutter={16} style={{ height: "100%" }}>
+            <Row gutter={16} style={{ height: "100%" }} className="checkout-footer-sum">
                 <Col span={16} style={{ paddingLeft: "10px" }}>
-                    <Text style={{ fontSize: "32px" }}>{currentTotal.toFixed(2)}€</Text>
+                    <Text
+                        editable={{
+                            tooltip: "click to edit text",
+                            onChange: (customPrice: string) => {
+                                dispatch(setCustomPrice(Number(customPrice)));
+                            },
+                        }}
+                        style={{ fontSize: "32px" }}
+                    >
+                        {price.toFixed(2)}€
+                    </Text>
                     <Text style={{ color: balanceAfterCheckout < 0 ? "red" : "black" }}>
                         Kontostand danach: {balanceAfterCheckout.toFixed(2)}€
                     </Text>
@@ -53,7 +75,9 @@ const CheckoutFooter: React.FC = () => {
                         style={{ width: "100%" }}
                         type="primary"
                         disabled={!customerId || !Object.keys(shoppingCart).length}
-                        onClick={() => dispatchAndSaveEvent(checkout({ id: uuidv4(), customerId, shoppingCart }))}
+                        onClick={() =>
+                            dispatchAndSaveEvent(checkout({ id: uuidv4(), customerId, shoppingCart, customPrice }))
+                        }
                     >
                         Checkout
                     </Button>
@@ -71,18 +95,18 @@ const CheckoutFooter: React.FC = () => {
                 options={[
                     {
                         label: (
-                            <Row gutter={16} style={{ height: "100%" }}>
+                            <Row gutter={16} style={{ height: "100%" }} className="checkout-footer-buyer-info">
                                 <Col span={4}>
                                     <UserOutlined />
                                 </Col>
-                                <Col span={20}>{renderSelectedAccount(customerId)}</Col>
+                                <Col span={20}>{renderBuyerAccountInfo(customerId)}</Col>
                             </Row>
                         ),
                         value: "accounts",
                     },
                     {
                         label: (
-                            <Row gutter={16} style={{ height: "100%" }}>
+                            <Row gutter={16} style={{ height: "100%" }} className="checkout-footer-shopping-cart">
                                 <Col span={4}>
                                     <ShoppingCartOutlined />
                                 </Col>

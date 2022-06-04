@@ -15,6 +15,10 @@
     text-align: left;
 }
 
-.checkout-footer .anticon {
+.checkout-footer-buyer-info .anticon, .checkout-footer-shopping-cart .anticon {
     font-size: 2em;
+}
+
+.checkout-footer-buyer-info {
+    line-height: 18px;
 }

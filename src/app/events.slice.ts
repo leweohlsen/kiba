@@ -10,6 +10,7 @@ export interface EventsState {
     products: Record<string, Product>;
     transactions: Transaction<any>[];
     shoppingCart: Record<string, number>;
+    customPrice: number;
     customerId: string;
 }
 
@@ -20,6 +21,7 @@ export const initialState: EventsState = {
     products: {},
     transactions: [],
     shoppingCart: {},
+    customPrice: undefined,
     customerId: undefined,
 };
 
@@ -43,16 +45,21 @@ export const eventSlice = createSlice({
             const buyer = state.accounts[action.payload.customerId];
             Object.entries(action.payload.shoppingCart).forEach(([productId, quantity]) => {
                 const product = state.products[productId];
-                buyer.balance -= product.price * quantity;
+                if (action.payload.customPrice) {
+                    buyer.balance -= action.payload.customPrice;
+                } else {
+                    buyer.balance -= product.price * quantity;
+                }
             });
             state.shoppingCart = initialState.shoppingCart;
             state.customerId = initialState.customerId;
+            state.customPrice = undefined;
         },
         editGroup: (state, action: PayloadAction<Group>) => {
             state.groups[action.payload.id] = {
                 ...state.groups[action.payload.id],
                 ...action.payload,
-            }
+            };
         },
         addToCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) {
@@ -77,6 +84,9 @@ export const eventSlice = createSlice({
         },
         setCustomerId: (state, action: PayloadAction<string>) => {
             state.customerId = action.payload;
+        },
+        setCustomPrice: (state, action: PayloadAction<number>) => {
+            state.customPrice = action.payload;
         },
     },
 });
@@ -105,6 +115,7 @@ export const {
     addToCart,
     removeFromCart,
     setCustomerId,
+    setCustomPrice,
 } = actionCreatorsWithDates(eventSlice.actions);
 
 export const selectAccounts = (state: RootState) => Object.values(state.events.accounts);
@@ -114,5 +125,6 @@ export const selectCategories = (state: RootState) => Object.values(state.events
 export const selectProducts = (state: RootState) => Object.values(state.events.products);
 export const selectShoppingCart = (state: RootState) => state.events.shoppingCart;
 export const selectCustomerId = (state: RootState) => state.events.customerId;
+export const selectCustomPrice = (state: RootState) => state.events.customPrice;
 
 export default eventSlice.reducer;

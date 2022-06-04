@@ -39,11 +39,12 @@ const TransactionsList: React.FC = () => {
         return (
             <div>
                 <span style={{ marginRight: "10px" }}>
-                    {customer.name} ({group.name}) mit Kontostand {customer.balance.toFixed(2)}€ kauft
+                    {customer.name} ({group.name}) kauft
                 </span>
                 <div style={{ padding: "10px" }}>
                     <ShoppingCart items={t.payload.shoppingCart} />
                 </div>
+                {t.payload.customPrice && <span>zum Sonderpreis von {t.payload.customPrice}€</span>}
             </div>
         );
     };
