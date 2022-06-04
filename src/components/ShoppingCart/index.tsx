@@ -12,7 +12,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ items }) => {
     return (
         <Avatar.Group
             className="shopping-cart"
-            maxCount={3}
+            maxCount={4}
             size="large"
             maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf", marginLeft: "0px" }}
         >

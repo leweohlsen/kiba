@@ -1,12 +1,6 @@
 import { Product } from "../../app/types";
 import { Row, Col, Card, Avatar, InputNumber, Typography, Badge } from "antd";
-import {
-    EditOutlined,
-    EllipsisOutlined,
-    SettingOutlined,
-    PlusCircleTwoTone,
-    MinusCircleTwoTone,
-} from "@ant-design/icons";
+import { EditOutlined, PlusCircleTwoTone, MinusCircleTwoTone } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart, selectShoppingCart } from "../../app/events.slice";
 
@@ -28,19 +22,13 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         <Row gutter={[24, 24]}>
             {products.map((product) => (
                 <Col className="gutter-row" span={4}>
-                    <Badge count={shoppingCart[product.id] || 0}>
+                    <Badge className="product-badge" count={shoppingCart[product.id] || 0}>
                         <Card
                             className="product-card"
                             onClick={() => {
                                 dispatch(addToCart(product.id));
                             }}
-                            cover={
-                                <img
-                                    alt="example"
-                                    style={{ maxHeight: 200, width: "auto", margin: "0 auto" }}
-                                    src={"productimage://" + product.image}
-                                />
-                            }
+                            cover={<img className="product-image" src={"productimage://" + product.image} />}
                             actions={[
                                 <PlusCircleTwoTone
                                     onClick={(e) => {

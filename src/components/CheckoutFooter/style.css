@@ -1,5 +1,6 @@
 .checkout-footer {
     height: 100px;
+    background-color: #ededed;
 }
 
 .checkout-footer .ant-segmented-item-label {
@@ -12,6 +13,7 @@
     align-content: center;
     flex-direction: column;
     text-align: left;
+    margin-bottom: 10px;
 }
 
 .checkout-footer .anticon {

@@ -39,7 +39,7 @@ const CheckoutFooter: React.FC = () => {
         const account = accounts.find((a) => a.id === customerId);
         return (
             <Row gutter={16} style={{ height: "100%" }}>
-                <Col span={16}>
+                <Col span={16} style={{paddingLeft: "10px"}}>
                     <Text style={{ fontSize: "32px", fontWeight: "bold" }}>{currentTotal.toFixed(2)}€</Text>
                     <Text>Kontostand danach: {(account.balance - currentTotal).toFixed(2)}€</Text>
                 </Col>
@@ -98,47 +98,6 @@ const CheckoutFooter: React.FC = () => {
                     },
                 ]}
             />
-            {/* <Row gutter={16}>
-                <Col span={4}>
-                    {customerId && (
-                        <Row>
-                            <Col>
-                                <Avatar>
-                                    <UserOutlined />
-                                </Avatar>
-                            </Col>
-                            <Col>
-                                <Text style={{ lineHeight: "32px", marginLeft: "8px" }}>
-                                    {accounts.find((a) => a.id === customerId).name}
-                                </Text>
-                            </Col>
-                        </Row>
-                    )}
-                    <Divider type="vertical" />
-                </Col>
-                <Col span={10}>
-                    {Object.keys(shoppingCart).length > 0 && (
-                        <>
-                            <Text style={{ marginRight: "16px" }}>kauft</Text>
-                            <ShoppingCart items={shoppingCart} />
-                        </>
-                    )}
-                </Col>
-                <Col span={4}>
-                    <Text style={{ fontSize: "32px", fontWeight: "bold" }}>{currentTotal.toFixed(2) + "€"}</Text>
-                </Col>
-                <Col span={6}>
-                    <Button
-                        size={"large"}
-                        style={{ width: "100%" }}
-                        type="primary"
-                        disabled={!customerId || !Object.keys(shoppingCart).length}
-                        onClick={() => dispatchAndSaveEvent(checkout({ id: uuidv4(), customerId, shoppingCart }))}
-                    >
-                        Checkout
-                    </Button>
-                </Col>
-            </Row> */}
         </>
     );
 };

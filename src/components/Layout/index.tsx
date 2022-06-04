@@ -6,6 +6,8 @@ import { ShopOutlined, TeamOutlined, UnorderedListOutlined, LineChartOutlined } 
 import AccountSelection from "../AccountSelection";
 import ProductSelection from "../ProductSelection";
 import TransactionsList from "../TransactionsList";
+import AccountHeader from "../AccountHeader";
+import ProductHeader from "../ProductHeader";
 
 import "./style.css";
 import CheckoutFooter from "../CheckoutFooter";
@@ -60,15 +62,26 @@ const SiderDemo = () => {
         }
     };
 
+    const renderHeader = () => {
+        switch (currentMenuItem) {
+            case "accounts":
+                return <AccountHeader />;
+            case "products":
+                return <ProductHeader />;
+            default:
+                return null;
+        }
+    };
+
     return (
         <Layout style={{ minHeight: "100vh" }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ overflow: "hidden" }}>
+            <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} style={{ overflow: "hidden", zIndex: 99 }}>
                 <div className="logo">🧃</div>
                 <Menu theme="dark" selectedKeys={[currentMenuItem]} mode="inline" items={menuItems} onClick={onClick} />
             </Sider>
             <Layout className="site-layout">
-                {/* <Header className="site-layout-background" style={{ padding: 0 }} /> */}
-                <Content style={{ margin: "16px", overflow: "auto", height: "calc(100vh - 120px)" }}>
+                {renderHeader()}
+                <Content style={{ padding: "16px", overflowY: "scroll", height: "calc(100vh - 200px)" }}>
                     {renderContent()}
                 </Content>
                 <Footer style={{ backgroundColor: "white", height: "100px", padding: 0 }}>

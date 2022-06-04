@@ -23,12 +23,6 @@ const { Panel } = Collapse;
 const { Option } = Select;
 const { Title } = Typography;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 const AccountSelection = () => {
     const dispatch = useDispatch();
     const groups = useSelector(selectGroups);
@@ -53,33 +47,6 @@ const AccountSelection = () => {
         <>
             <GroupCreationModal />
             <AccountCreationModal />
-            <div
-                style={{
-                    marginBottom: "16px",
-                    justifyContent: "flex-end",
-                    display: "flex",
-                }}
-            >
-                <SearchField type={"accounts"} />
-                <Tooltip title="Gruppe erstellen">
-                    <Button
-                        shape="circle"
-                        size="large"
-                        icon={<UsergroupAddOutlined style={{ fontSize: "1em" }} />}
-                        style={{ marginLeft: "8px" }}
-                        onClick={() => dispatch(setIsGroupCreationVisible(true))}
-                    />
-                </Tooltip>
-                <Tooltip title="Konto erstellen">
-                    <Button
-                        shape="circle"
-                        size="large"
-                        icon={<UserAddOutlined style={{ fontSize: "1em" }} />}
-                        style={{ marginLeft: "8px" }}
-                        onClick={() => dispatch(setIsAccountCreationVisible(true))}
-                    />
-                </Tooltip>
-            </div>
             <Collapse
                 accordion={!accountSearchTerm}
                 onChange={handleChange}

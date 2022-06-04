@@ -23,12 +23,6 @@ const { Panel } = Collapse;
 const { Option } = Select;
 const { Title } = Typography;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 const ProductSelection = () => {
     const dispatch = useDispatch();
     const categories = useSelector(selectCategories);
@@ -53,33 +47,6 @@ const ProductSelection = () => {
         <>
             <CategoryCreationModal />
             <ProductCreationModal />
-            <div
-                style={{
-                    marginBottom: "16px",
-                    justifyContent: "flex-end",
-                    display: "flex",
-                }}
-            >
-                <SearchField type={"products"} />
-                <Tooltip title="Kategorie erstellen">
-                    <Button
-                        shape="circle"
-                        size="large"
-                        icon={<FolderAddOutlined style={{ fontSize: "1em" }} />}
-                        style={{ marginLeft: "8px" }}
-                        onClick={() => dispatch(setIsCategoryCreationVisible(true))}
-                    />
-                </Tooltip>
-                <Tooltip title="Produkt erstellen">
-                    <Button
-                        shape="circle"
-                        size="large"
-                        icon={<FileAddOutlined style={{ fontSize: "1em" }} />}
-                        style={{ marginLeft: "8px" }}
-                        onClick={() => dispatch(setIsProductCreationVisible(true))}
-                    />
-                </Tooltip>
-            </div>
             <Collapse
                 // onChange={handleChange}
                 // activeKey={!productSearchTerm ? currentGroup : groups.map((g) => g.id)}
