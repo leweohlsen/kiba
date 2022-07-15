@@ -1,101 +1,99 @@
-import {
-  Modal,
-  Form,
-  Input,
-  Button,
-  Checkbox,
-  InputNumber,
-  Select,
-} from "antd";
+import { Modal, Form, Input, Button, Checkbox, InputNumber, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Account } from "../../app/types";
-import { selectGroups, addAccount } from "../../app/events.slice";
+import { selectGroups, addAccount, editAccount, selectAccounts } from "../../app/events.slice";
 import {
-  selectIsAccountCreationVisible,
-  setIsAccountCreationVisible,
+    selectIsAccountCreationVisible,
+    setIsAccountCreationVisible,
+    selectItemBeingEditedId,
+    setItemBeingEditedId,
 } from "../../app/ui.slice";
 import { useDispatchAndSaveEvent } from "../App";
+import { useForm } from "antd/lib/form/Form";
 
 const { Option } = Select;
 
 const AccountCreationModal = () => {
-  const dispatch = useDispatch();
-  const dispatchAndSaveEvent = useDispatchAndSaveEvent();
+    const dispatch = useDispatch();
+    const dispatchAndSaveEvent = useDispatchAndSaveEvent();
+    const [form] = useForm<Account>();
 
-  const isAccountCreationVisible = useSelector(selectIsAccountCreationVisible);
-  const groups = useSelector(selectGroups);
+    const isAccountCreationVisible = useSelector(selectIsAccountCreationVisible);
+    const groups = useSelector(selectGroups);
+    const accounts = useSelector(selectAccounts);
+    const itemBeingEditedId = useSelector(selectItemBeingEditedId);
 
-  const onFinish = (account: Account) => {
-    dispatchAndSaveEvent(addAccount({ ...account, id: uuidv4() }));
-    dispatch(setIsAccountCreationVisible(false));
-  };
+    useEffect(() => {
+        if (!itemBeingEditedId) form.resetFields();
+        form.setFieldsValue(accounts.find((a) => a.id === itemBeingEditedId));
+    }, [itemBeingEditedId]);
 
-  const onClose = () => {
-    dispatch(setIsAccountCreationVisible(false));
-  };
+    const onFinish = (account: Account) => {
+        if (itemBeingEditedId) {
+            dispatchAndSaveEvent(editAccount(account));
+        } else {
+            dispatchAndSaveEvent(addAccount({ ...account, id: uuidv4() }));
+        }
+        onClose();
+    };
 
-  // const onFinishFailed = (errorInfo: any) => {
-  //   console.log('Failed:', errorInfo);
-  // };
+    const onClose = () => {
+        dispatch(setIsAccountCreationVisible(false));
+        dispatch(setItemBeingEditedId(undefined));
+        form.resetFields();
+    };
 
-  return (
-    <Modal
-      title="Konto erstellen"
-      visible={isAccountCreationVisible}
-      onCancel={onClose}
-      footer={null}
-    >
-      <Form
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[{ required: true, message: "Bitte Name eingeben!" }]}
-        >
-          <Input />
-        </Form.Item>
+    return (
+        <Modal title="Konto erstellen" visible={isAccountCreationVisible} onCancel={onClose} footer={null}>
+            <Form
+                name="basic"
+                labelCol={{ span: 8 }}
+                wrapperCol={{ span: 16 }}
+                initialValues={{ remember: true }}
+                onFinish={onFinish}
+                autoComplete="off"
+                form={form}
+            >
+                <Form.Item label="ID" name="id" hidden>
+                    <Input />
+                </Form.Item>
 
-        <Form.Item
-          label="Kontostand"
-          name="balance"
-          rules={[{ required: true, message: "Bitte Kontostand eingeben!" }]}
-        >
-          <InputNumber />
-        </Form.Item>
+                <Form.Item label="Name" name="name" rules={[{ required: true, message: "Bitte Name eingeben!" }]}>
+                    <Input />
+                </Form.Item>
 
-        <Form.Item
-          label="Gruppe"
-          name="groupId"
-          rules={[{ required: true, message: "Bitte Gruppe auswählen!" }]}
-        >
-          <Select
-            // placeholder="Select a option and change input text above"
-            // onChange={onGenderChange}
-            allowClear
-          >
-            {groups.map((g) => (
-              <Option key={g.id} value={g.id}>
-                {g.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
+                <Form.Item
+                    label="Kontostand"
+                    name="balance"
+                    rules={[{ required: true, message: "Bitte Kontostand eingeben!" }]}
+                >
+                    <InputNumber />
+                </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button type="primary" htmlType="submit">
-            Speichern
-          </Button>
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
+                <Form.Item
+                    label="Gruppe"
+                    name="groupId"
+                    rules={[{ required: true, message: "Bitte Gruppe auswählen!" }]}
+                >
+                    <Select allowClear>
+                        {groups.map((g) => (
+                            <Option key={g.id} value={g.id}>
+                                {g.name}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+
+                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                    <Button type="primary" htmlType="submit">
+                        Speichern
+                    </Button>
+                </Form.Item>
+            </Form>
+        </Modal>
+    );
 };
 
 export default AccountCreationModal;

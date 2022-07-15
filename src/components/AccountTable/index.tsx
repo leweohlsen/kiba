@@ -1,6 +1,7 @@
-import { Table } from "antd";
+import { Table, Space, Tooltip, Button } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { setCurrentMenuItem } from "../../app/ui.slice";
+import { setCurrentMenuItem, setIsAccountCreationVisible, setItemBeingEditedId } from "../../app/ui.slice";
 import { setCustomerId } from "../../app/events.slice";
 import type { Account } from "../../app/types";
 
@@ -23,6 +24,31 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
             title: "Kontostand",
             dataIndex: "balance",
             render: (value: number) => value.toFixed(2),
+        },
+        {
+            title: "Aktionen",
+            key: "action",
+            render: (_: any, record: Account) => (
+                <Space size="middle">
+                    <Tooltip title="Konto bearbeiten">
+                        <Button
+                            type="primary"
+                            size="small"
+                            ghost
+                            shape="circle"
+                            icon={<EditOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                dispatch(setItemBeingEditedId(record.id));
+                                dispatch(setIsAccountCreationVisible(true));
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Konto löschen">
+                        <Button type="primary" size="small" ghost danger shape="circle" icon={<DeleteOutlined />} />
+                    </Tooltip>
+                </Space>
+            ),
         },
     ];
 
