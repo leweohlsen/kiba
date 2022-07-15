@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart, selectShoppingCart } from "../../app/events.slice";
 
 import "./style.css";
+import { setIsProductCreationVisible, setItemBeingEditedId } from "../../app/ui.slice";
 
 const { Title } = Typography;
 
@@ -42,7 +43,14 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
                                         dispatch(removeFromCart(product.id));
                                     }}
                                 />,
-                                <EditOutlined key="edit" />,
+                                <EditOutlined
+                                    key="edit"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        dispatch(setItemBeingEditedId(product.id));
+                                        dispatch(setIsProductCreationVisible(true));
+                                    }}
+                                />,
                             ]}
                         >
                             <Meta

@@ -20,6 +20,7 @@ export type Account = {
 
 export type Product = {
     id: string;
+    ean: number;
     name: string;
     categoryId: string;
     price: number;

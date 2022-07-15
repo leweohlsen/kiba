@@ -1,9 +1,10 @@
 import { Collapse, Select, Tooltip, Button, Typography } from "antd";
 import { FolderAddOutlined, FileAddOutlined } from "@ant-design/icons";
+import BarcodeReader from "react-barcode-reader";
+import { useDispatch, useSelector } from "react-redux";
 
 import ProductGrid from "../ProductGrid";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCategories, selectProducts } from "../../app/events.slice";
+import { addToCart, selectCategories, selectProducts } from "../../app/events.slice";
 import ProductCreationModal from "../ProductCreationModal";
 import {
     selectProductSearchTerm,
@@ -43,14 +44,25 @@ const ProductSelection = () => {
     //     dispatch(setCurrentGroup(key));
     // };
 
+    const handleScan = (ean: string) => {
+        const productToAdd = products.find((p) => p.ean === parseInt(ean));
+        if (!productToAdd) return;
+        dispatch(addToCart(productToAdd.id));
+    };
+
+    const handleScanError = (err: Error) => {
+        // TODO: display error message
+    };
+
     return (
         <>
+            <BarcodeReader onError={handleScanError} onScan={handleScan} />
             <CategoryCreationModal />
             <ProductCreationModal />
             <Collapse
                 // onChange={handleChange}
                 // activeKey={!productSearchTerm ? currentGroup : groups.map((g) => g.id)}
-                defaultActiveKey={categories.map(c => c.id)}
+                defaultActiveKey={categories.map((c) => c.id)}
                 className="product-selection-collapse"
             >
                 {categories.map((category: Category, idx) => {

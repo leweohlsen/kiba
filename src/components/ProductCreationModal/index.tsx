@@ -1,11 +1,19 @@
 import { Modal, Form, Input, Button, Upload, InputNumber, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Product } from "../../app/types";
-import { selectCategories, addProduct } from "../../app/events.slice";
-import { selectIsProductCreationVisible, selectNewProductImage, setIsProductCreationVisible } from "../../app/ui.slice";
+import { selectCategories, addProduct, editProduct, selectProducts } from "../../app/events.slice";
+import {
+    selectIsProductCreationVisible,
+    selectNewProductImage,
+    setIsProductCreationVisible,
+    selectItemBeingEditedId,
+    setItemBeingEditedId,
+} from "../../app/ui.slice";
 import { useDispatchAndSaveEvent } from "../App";
+import { useForm } from "antd/lib/form/Form";
 
 const { Option } = Select;
 
@@ -16,16 +24,31 @@ const ProductCreationModal: React.FC = () => {
     const isProductCreationVisible = useSelector(selectIsProductCreationVisible);
     const newProductImage = useSelector(selectNewProductImage);
     const categories = useSelector(selectCategories);
+    const products = useSelector(selectProducts);
+    const itemBeingEditedId = useSelector(selectItemBeingEditedId);
+
+    const [form] = useForm<Product>();
 
     const newProductId = uuidv4();
 
+    useEffect(() => {
+        if (!itemBeingEditedId) form.resetFields();
+        form.setFieldsValue(products.find((p) => p.id === itemBeingEditedId));
+    }, [itemBeingEditedId]);
+
     const onFinish = (product: Product) => {
-        dispatchAndSaveEvent(addProduct({ ...product, id: newProductId, image: newProductImage }));
-        dispatch(setIsProductCreationVisible(false));
+        if (itemBeingEditedId) {
+            dispatchAndSaveEvent(editProduct(product));
+        } else {
+            dispatchAndSaveEvent(addProduct({ ...product, id: newProductId, image: newProductImage }));
+        }
+        onClose();
     };
 
     const onClose = () => {
         dispatch(setIsProductCreationVisible(false));
+        dispatch(setItemBeingEditedId(undefined));
+        form.resetFields();
     };
 
     // const onFinishFailed = (errorInfo: any) => {
@@ -48,7 +71,11 @@ const ProductCreationModal: React.FC = () => {
                 initialValues={{ remember: false }}
                 onFinish={onFinish}
                 autoComplete="off"
+                form={form}
             >
+                <Form.Item label="ID" name="id" hidden>
+                    <Input />
+                </Form.Item>
                 <Form.Item name="image">
                     {/* <Upload
                         // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -70,6 +97,10 @@ const ProductCreationModal: React.FC = () => {
                 </Form.Item>
                 <Form.Item label="Name" name="name" rules={[{ required: true, message: "Bitte Name eingeben!" }]}>
                     <Input />
+                </Form.Item>
+
+                <Form.Item label="EAN" name="ean">
+                    <InputNumber style={{ width: "100%" }} />
                 </Form.Item>
 
                 <Form.Item
