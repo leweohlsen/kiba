@@ -13,7 +13,7 @@ if (require("electron-squirrel-startup")) {
     app.quit();
 }
 
-async function handleAppendTransaction(_, newTransaction: Transaction<any>) {
+async function handleAppendTransaction(_: any, newTransaction: Transaction<any>) {
     const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
     const buffer = await fs.promises.readFile(transactionsFilePath);
     const transactions: Transaction<any>[] = JSON.parse(buffer.toString());
@@ -54,6 +54,7 @@ const createWindow = (): void => {
         height: 600,
         width: 800,
         webPreferences: {
+            contextIsolation: true,
             preload: path.join(__dirname, "../../src/preload.js"),
         },
     });
