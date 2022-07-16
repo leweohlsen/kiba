@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Button, Typography, Segmented } from "antd";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
+import BarcodeReader from "react-barcode-reader";
 import { selectCurrentTotal } from "../../app/selectors";
 import {
     checkout,
@@ -9,8 +10,10 @@ import {
     selectCustomerId,
     selectCustomPrice,
     selectGroups,
+    selectProducts,
     selectShoppingCart,
     setCustomPrice,
+    addToCart,
 } from "../../app/events.slice";
 import ShoppingCart from "../ShoppingCart";
 import { useDispatchAndSaveEvent } from "../App";
@@ -26,11 +29,25 @@ const CheckoutFooter: React.FC = () => {
     const customerId = useSelector(selectCustomerId);
     const accounts = useSelector(selectAccounts);
     const groups = useSelector(selectGroups);
+    const products = useSelector(selectProducts);
     const shoppingCart = useSelector(selectShoppingCart);
     const currentMenuItem = useSelector(selectCurrentMenuItem);
 
     const dispatch = useDispatch();
     const dispatchAndSaveEvent = useDispatchAndSaveEvent();
+
+    const handleScan = (ean: string) => {
+        console.log("scanned", ean);
+
+        const productToAdd = products.find((p) => p.ean === parseInt(ean));
+        if (!productToAdd) return;
+        dispatch(addToCart(productToAdd.id));
+    };
+
+    const handleScanError = (err: Error) => {
+        // TODO: display error message
+        console.error(err);
+    };
 
     const renderBuyerAccountInfo = (customerId: string) => {
         if (!customerId) return;
@@ -88,6 +105,7 @@ const CheckoutFooter: React.FC = () => {
 
     return (
         <>
+            <BarcodeReader onError={handleScanError} onScan={handleScan} />
             <Segmented
                 block
                 className="checkout-footer"

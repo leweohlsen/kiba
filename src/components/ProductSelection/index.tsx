@@ -1,6 +1,4 @@
-import { Collapse, Select, Tooltip, Button, Typography } from "antd";
-import { FolderAddOutlined, FileAddOutlined } from "@ant-design/icons";
-import BarcodeReader from "react-barcode-reader";
+import { Collapse, Select, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import ProductGrid from "../ProductGrid";
@@ -44,19 +42,8 @@ const ProductSelection = () => {
     //     dispatch(setCurrentGroup(key));
     // };
 
-    const handleScan = (ean: string) => {
-        const productToAdd = products.find((p) => p.ean === parseInt(ean));
-        if (!productToAdd) return;
-        dispatch(addToCart(productToAdd.id));
-    };
-
-    const handleScanError = (err: Error) => {
-        // TODO: display error message
-    };
-
     return (
         <>
-            <BarcodeReader onError={handleScanError} onScan={handleScan} />
             <CategoryCreationModal />
             <ProductCreationModal />
             <Collapse

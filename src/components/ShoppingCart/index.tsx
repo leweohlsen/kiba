@@ -1,14 +1,15 @@
 import { Avatar, Tooltip, Badge } from "antd";
-import { UserOutlined, AntDesignOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
-import { selectShoppingCart, selectProducts } from "../../app/events.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProducts, addToCart } from "../../app/events.slice";
 
 interface ShoppingCartProps {
     items: Record<string, number>;
 }
 
 const ShoppingCart: React.FC<ShoppingCartProps> = ({ items }) => {
+    const dispatch = useDispatch();
     const products = useSelector(selectProducts);
+
     return (
         <Avatar.Group
             className="shopping-cart"
