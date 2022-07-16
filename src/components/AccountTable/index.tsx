@@ -1,11 +1,14 @@
-import { Table, Space, Tooltip, Button } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Table, Space, Tooltip, Button, Modal } from "antd";
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { setCurrentMenuItem, setIsAccountCreationVisible, setItemBeingEditedId } from "../../app/ui.slice";
-import { setCustomerId } from "../../app/events.slice";
+import { deleteAccount, setCustomerId } from "../../app/events.slice";
+import { useDispatchAndSaveEvent } from "../App";
 import type { Account } from "../../app/types";
 
 import "./style.css";
+
+const { confirm } = Modal;
 
 interface AccountTableProps {
     accounts: Account[];
@@ -13,6 +16,22 @@ interface AccountTableProps {
 
 const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
     const dispatch = useDispatch();
+    const dispatchAndSaveEvent = useDispatchAndSaveEvent();
+
+    const showDeleteConfirm = (account: Account) => {
+        confirm({
+          title: 'Sicher?',
+          icon: <ExclamationCircleOutlined />,
+          content: 'Soll dieses Konto wirklich gelöscht werden?',
+          okText: 'Ja',
+          okType: 'danger',
+          cancelText: 'Oops, nee',
+          onOk() {
+            dispatchAndSaveEvent(deleteAccount(account));
+          },
+        });
+      };
+
     const columns = [
         {
             key: "name",
@@ -45,7 +64,18 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
                         />
                     </Tooltip>
                     <Tooltip title="Konto löschen">
-                        <Button type="primary" size="small" ghost danger shape="circle" icon={<DeleteOutlined />} />
+                        <Button
+                            type="primary"
+                            size="small"
+                            ghost
+                            danger
+                            shape="circle"
+                            icon={<DeleteOutlined />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                showDeleteConfirm(record);
+                            }}
+                        />
                     </Tooltip>
                 </Space>
             ),
