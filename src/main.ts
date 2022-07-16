@@ -1,9 +1,8 @@
 import { app, BrowserWindow, ipcMain, dialog, protocol, IpcMainEvent } from "electron";
-import Store from "electron-store";
 import path from "path";
 import fs from "fs";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Product, Transaction } from "./app/types";
+import readline from "readline";
+import type { Transaction } from "./app/types";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -15,21 +14,29 @@ if (require("electron-squirrel-startup")) {
 }
 
 async function handleAppendTransaction(_: any, newTransaction: Transaction<any>) {
-    const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
-    const buffer = await fs.promises.readFile(transactionsFilePath);
-    const transactions: Transaction<any>[] = JSON.parse(buffer.toString());
-    transactions.push(newTransaction);
-    await fs.promises.writeFile(transactionsFilePath, JSON.stringify(transactions));
-    return transactions;
+    const transactionsFilePath = path.join(app.getPath("userData"), "transactions.jsonl");
+    fs.appendFileSync(transactionsFilePath, JSON.stringify(newTransaction) + "\r\n");
 }
 
 async function handleGetTransactions() {
-    const transactionsFilePath = path.join(app.getPath("userData"), "transactions.json");
+    const transactionsFilePath = path.join(app.getPath("userData"), "transactions.jsonl");
     if (!fs.existsSync(transactionsFilePath.toString())) {
-        await fs.promises.writeFile(transactionsFilePath, "[]");
+        fs.openSync(transactionsFilePath, "w");
     }
-    const buffer = await fs.promises.readFile(transactionsFilePath);
-    return JSON.parse(buffer.toString());
+
+    const fileStream = fs.createReadStream(transactionsFilePath);
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity,
+    });
+
+    const transactionList = [];
+
+    for await (const line of rl) {
+        transactionList.push(JSON.parse(line));
+    }
+
+    return transactionList;
 }
 
 async function handleSelectProductImage(event: IpcMainEvent, productId: string) {
@@ -45,7 +52,7 @@ async function handleSelectProductImage(event: IpcMainEvent, productId: string) 
     }
     const targetFilePath = path.join(productImageDir, targetFileName);
     await fs.promises.copyFile(filePath, targetFilePath);
-    console.log(`Created product image file ${targetFilePath}`)
+    console.log(`Created product image file ${targetFilePath}`);
     event.reply("updateProductImage", targetFileName);
 }
 
