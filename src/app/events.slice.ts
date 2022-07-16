@@ -1,6 +1,7 @@
 import { createSlice, ActionCreator } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Category, Product, Purchase, Transaction } from "./types";
+import { Group, Account, Category, Product, Purchase, Transaction, Stats } from "./types";
+import { calculatePurchaseTotal } from "./util";
 import { RootState } from "./store";
 
 export interface EventsState {
@@ -12,6 +13,7 @@ export interface EventsState {
     shoppingCart: Record<string, number>;
     customPrice: number;
     customerId: string;
+    stats: Stats;
 }
 
 export const initialState: EventsState = {
@@ -23,6 +25,9 @@ export const initialState: EventsState = {
     shoppingCart: {},
     customPrice: undefined,
     customerId: undefined,
+    stats: {
+        totalTurnover: 0,
+    },
 };
 
 export const eventSlice = createSlice({
@@ -43,17 +48,13 @@ export const eventSlice = createSlice({
         },
         checkout: (state, action: PayloadAction<Purchase>) => {
             const buyer = state.accounts[action.payload.customerId];
-            if (action.payload.customPrice) {
-                buyer.balance -= action.payload.customPrice;
-            } else {
-                Object.entries(action.payload.shoppingCart).forEach(([productId, quantity]) => {
-                    const product = state.products[productId];
-                    buyer.balance -= product.price * quantity;
-                });
-            }
+            const total =
+                action.payload.customPrice | calculatePurchaseTotal(action.payload.shoppingCart, state.products);
+            buyer.balance -= total;
             state.shoppingCart = initialState.shoppingCart;
             state.customerId = initialState.customerId;
             state.customPrice = undefined;
+            state.stats.totalTurnover += total;
         },
         editGroup: (state, action: PayloadAction<Group>) => {
             state.groups[action.payload.id] = {
@@ -74,7 +75,7 @@ export const eventSlice = createSlice({
             };
         },
         deleteAccount: (state, action: PayloadAction<Account>) => {
-            delete state.accounts[action.payload.id]
+            delete state.accounts[action.payload.id];
         },
         addToCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) {
@@ -140,9 +141,10 @@ export const selectAccounts = (state: RootState) => Object.values(state.events.a
 export const selectGroups = (state: RootState) => Object.values(state.events.groups);
 export const selectTransactions = (state: RootState) => state.events.transactions;
 export const selectCategories = (state: RootState) => Object.values(state.events.categories);
-export const selectProducts = (state: RootState) => Object.values(state.events.products);
+export const selectProducts = (state: RootState) => state.events.products;
 export const selectShoppingCart = (state: RootState) => state.events.shoppingCart;
 export const selectCustomerId = (state: RootState) => state.events.customerId;
 export const selectCustomPrice = (state: RootState) => state.events.customPrice;
+export const selectStats = (state: RootState) => state.events.stats;
 
 export default eventSlice.reducer;

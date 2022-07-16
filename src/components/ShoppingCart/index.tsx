@@ -1,6 +1,6 @@
 import { Avatar, Tooltip, Badge } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { selectProducts, addToCart } from "../../app/events.slice";
+import { selectProducts } from "../../app/events.slice";
 
 interface ShoppingCartProps {
     items: Record<string, number>;
@@ -19,7 +19,7 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ items }) => {
         >
             {Object.entries(items).map(([productId, quantity]) => {
                 if (!quantity) return null;
-                const product = products.find((p) => p.id === productId);
+                const product = products[productId];
                 return (
                     <div className="shopping-cart-item" style={{ marginRight: "8px" }}>
                         <Tooltip title={product.name} placement="top">

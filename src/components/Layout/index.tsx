@@ -8,6 +8,7 @@ import ProductSelection from "../ProductSelection";
 import TransactionsList from "../TransactionsList";
 import AccountHeader from "../AccountHeader";
 import ProductHeader from "../ProductHeader";
+import StatsPage from "../StatsPage";
 
 import "./style.css";
 import CheckoutFooter from "../CheckoutFooter";
@@ -57,6 +58,8 @@ const SiderDemo = () => {
                 return <ProductSelection />;
             case "transactions":
                 return <TransactionsList />;
+            case "stats":
+                return <StatsPage />
             default:
                 return null;
         }

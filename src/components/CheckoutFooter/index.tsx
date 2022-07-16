@@ -3,7 +3,7 @@ import { Row, Col, Button, Typography, Segmented } from "antd";
 import { UserOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { v4 as uuidv4 } from "uuid";
 import BarcodeReader from "react-barcode-reader";
-import { selectCurrentTotal } from "../../app/selectors";
+import { selectCartTotal } from "../../app/selectors";
 import {
     checkout,
     selectAccounts,
@@ -24,7 +24,7 @@ import { selectCurrentMenuItem } from "../../app/ui.slice";
 const { Text, Title } = Typography;
 
 const CheckoutFooter: React.FC = () => {
-    const currentTotal = useSelector(selectCurrentTotal);
+    const currentTotal = useSelector(selectCartTotal);
     const customPrice = useSelector(selectCustomPrice);
     const customerId = useSelector(selectCustomerId);
     const accounts = useSelector(selectAccounts);
@@ -39,7 +39,7 @@ const CheckoutFooter: React.FC = () => {
     const handleScan = (ean: string) => {
         console.log("scanned", ean);
 
-        const productToAdd = products.find((p) => p.ean === parseInt(ean));
+        const productToAdd = Object.values(products).find((p) => p.ean === parseInt(ean));
         if (!productToAdd) return;
         dispatch(addToCart(productToAdd.id));
     };

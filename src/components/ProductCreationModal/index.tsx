@@ -24,8 +24,8 @@ const ProductCreationModal: React.FC = () => {
     const isProductCreationVisible = useSelector(selectIsProductCreationVisible);
     const newProductImage = useSelector(selectNewProductImage);
     const categories = useSelector(selectCategories);
-    const products = useSelector(selectProducts);
     const itemBeingEditedId = useSelector(selectItemBeingEditedId);
+    const products = useSelector(selectProducts);
 
     const [form] = useForm<Product>();
 
@@ -33,8 +33,8 @@ const ProductCreationModal: React.FC = () => {
 
     useEffect(() => {
         if (!itemBeingEditedId) form.resetFields();
-        form.setFieldsValue(products.find((p) => p.id === itemBeingEditedId));
-    }, [itemBeingEditedId]);
+        form.setFieldsValue(products[itemBeingEditedId]);
+    }, [itemBeingEditedId, products]);
 
     const onFinish = (product: Product) => {
         if (itemBeingEditedId) {

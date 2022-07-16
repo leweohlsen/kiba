@@ -37,3 +37,7 @@ export type Purchase = {
 export interface Transaction<P> extends PayloadAction<P> {
     timestamp: number;
 }
+
+export type Stats = {
+    totalTurnover: number;
+}

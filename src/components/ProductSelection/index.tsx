@@ -53,7 +53,7 @@ const ProductSelection = () => {
                 className="product-selection-collapse"
             >
                 {categories.map((category: Category, idx) => {
-                    const categoryProducts = products
+                    const categoryProducts = Object.values(products)
                         .filter((p) => p.categoryId === category.id)
                         .filter(
                             (p) => !productSearchTerm || p.name.toLowerCase().includes(productSearchTerm.toLowerCase())
