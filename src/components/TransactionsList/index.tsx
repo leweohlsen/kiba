@@ -6,6 +6,8 @@ import {
     UsergroupAddOutlined,
     FolderAddOutlined,
     FileAddOutlined,
+    EditOutlined,
+    UserDeleteOutlined,
 } from "@ant-design/icons";
 import { selectAccounts, selectGroups, selectTransactions } from "../../app/events.slice";
 import { Transaction, Purchase, Account, Group, Product } from "../../app/types";
@@ -28,6 +30,12 @@ const TransactionsList: React.FC = () => {
                 return <FolderAddOutlined />;
             case "events/addProduct":
                 return <FileAddOutlined />;
+            case "events/editAccount":
+            case "events/editGroup":
+            case "events/editProduct":
+                return <EditOutlined />;
+            case "events/deleteAccount":
+                return <UserDeleteOutlined />;
             default:
                 return null;
         }
@@ -57,6 +65,23 @@ const TransactionsList: React.FC = () => {
         return `Konto ${t.payload.name} mit ${t.payload.balance.toFixed(2)}€ hinzugefügt`;
     };
 
+    const renderEditAccountTransaction = (t: Transaction<Account>) => {
+        // TODO: show what has changed
+        return `Konto ${t.payload.name} bearbeitet. Kontostand: ${t.payload.balance}`;
+    };
+
+    const renderEditGroupTransaction = (t: Transaction<Group>) => {
+        return `Gruppe ${t.payload.name} bearbeitet`;
+    };
+
+    const renderDeleteUserTransaction = (t: Transaction<Account>) => {
+        return `Konto ${t.payload.name} gelöscht`;
+    };
+
+    const renderEditProductTransaction = (t: Transaction<Product>) => {
+        return `Produkt ${t.payload.name} bearbeitet. Preis: ${t.payload.price.toFixed(2)}€`;
+    };
+
     const renderAddCategoryTransaction = (t: Transaction<Group>) => {
         return `Kategorie ${t.payload.name} hinzugefügt`;
     };
@@ -77,6 +102,14 @@ const TransactionsList: React.FC = () => {
                 return renderAddCategoryTransaction(transaction);
             case "events/addProduct":
                 return renderAddProductTransaction(transaction);
+            case "events/deleteAccount":
+                return renderDeleteUserTransaction(transaction);
+            case "events/editAccount":
+                return renderEditAccountTransaction(transaction);
+            case "events/editGroup":
+                return renderEditGroupTransaction(transaction);
+            case "events/editProduct":
+                return renderEditProductTransaction(transaction);
             default:
                 return JSON.stringify(transaction);
         }
