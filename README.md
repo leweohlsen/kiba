@@ -1,3 +1,5 @@
+![alt text](https://github.com/leweohlsen/kiba/blob/main/src/assets/macos_icon_256.png)
+
 # kiba
 
 **ki**osk and **ba**nk system for hassle-free management of accounts, groups, products and transactions
