@@ -51,7 +51,7 @@ const AccountCreationModal = () => {
                 name="basic"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
-                initialValues={{ remember: true }}
+                initialValues={{ groupId: null }}
                 onFinish={onFinish}
                 autoComplete="off"
                 form={form}
@@ -75,7 +75,6 @@ const AccountCreationModal = () => {
                 <Form.Item
                     label="Gruppe"
                     name="groupId"
-                    rules={[{ required: true, message: "Bitte Gruppe auswählen!" }]}
                 >
                     <Select allowClear>
                         {groups.map((g) => (

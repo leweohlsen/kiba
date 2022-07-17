@@ -14,7 +14,7 @@ export type Category = {
 export type Account = {
     id: string;
     name: string;
-    groupId: string;
+    groupId?: string;
     balance: number;
 };
 

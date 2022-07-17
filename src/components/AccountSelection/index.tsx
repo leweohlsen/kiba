@@ -45,7 +45,7 @@ const AccountSelection = () => {
                 activeKey={!accountSearchTerm ? currentGroup : groups.map((g) => g.id)}
                 className="account-selection-collapse"
             >
-                {groups.map((group: Group, idx) => {
+                {[...groups, { id: null, name: "Keine Gruppe" }].map((group: Group) => {
                     const groupAccounts = accounts
                         .filter((a) => a.groupId === group.id)
                         .filter(
