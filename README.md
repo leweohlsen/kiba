@@ -3,9 +3,10 @@
 **ki**osk and **ba**nk system for hassle-free management of accounts, groups, products and transactions
 
 ## Features
-* Persist all transactions to disk
-* Create accounts and organize them into groups
+* Create accounts with balances and organize them into groups
 * Create products (along with product images) and organize them into categories
+* Select Products to add them to the Shopping Cart or use a 2D-Barcode Scanning device
+* Persist all transactions to disk in a sequence of traceable transactions
 
 ## Technical details
 ### Electron, React and Redux
