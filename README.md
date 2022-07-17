@@ -28,7 +28,7 @@ Please refer to the [electron-forge](https://www.electronforge.io) docs for inst
 
 ## TODO
 * [x] Create a products page where categories and products can be created
-* [ ] Allow editing of groups, accounts, categories and products
+* [x] Allow editing of groups, accounts, categories and products
 * [x] Create a shopping cart that is visible 
-* [ ] Allow use of a USB barcode scanning device by catching EAN keyboard inputs in the product view
+* [x] Allow use of a USB barcode scanning device by catching EAN keyboard inputs in the product view
 * [ ] In case the event sourcing gets slow with many transactions, maybe implement snapshotting so we don't have to replay *all* events on every application start
