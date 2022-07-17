@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTransactions } from "../../app/events.slice";
 import { selectIsTransactionsLoaded, setIsTransactionsLoaded } from "../../app/ui.slice";
 
-const ReplayTransactions = () => {
+const ReplayTransactions: React.FC = () => {
     const dispatch = useDispatch();
     const isTransactionsLoaded = useSelector(selectIsTransactionsLoaded);
 
@@ -13,10 +13,8 @@ const ReplayTransactions = () => {
             const transactions = await window.electronAPI.getTransactions();
             dispatch(setTransactions(transactions));
             transactions.forEach((transaction) => {
-                console.log(transaction);
                 dispatch(transaction);
             });
-            console.log("all replayed");
             dispatch(setIsTransactionsLoaded(true));
         };
         getTransactions();

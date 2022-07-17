@@ -9,17 +9,6 @@ import ReplayTransactions from "../ReplayTransactions";
 
 import "./style.css";
 
-declare global {
-    interface Window {
-        electronAPI: {
-            appendTransaction: (t: Transaction<any>) => void;
-            getTransactions: () => void;
-            selectProductImage: (productId: string) => void;
-            updateProductImage: (channel: string, func: (event: string, data: string) => void) => void;
-        };
-    }
-}
-
 export const useDispatchAndSaveEvent = () => {
     const dispatch = useDispatch();
     const dispatchAndAddTransaction = async (action: Transaction<any>) => {
