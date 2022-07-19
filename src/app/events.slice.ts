@@ -62,6 +62,12 @@ export const eventSlice = createSlice({
                 ...action.payload,
             };
         },
+        editCategory: (state, action: PayloadAction<Category>) => {
+            state.categories[action.payload.id] = {
+                ...state.categories[action.payload.id],
+                ...action.payload,
+            };
+        },
         editProduct: (state, action: PayloadAction<Product>) => {
             state.products[action.payload.id] = {
                 ...state.products[action.payload.id],
@@ -76,6 +82,9 @@ export const eventSlice = createSlice({
         },
         deleteAccount: (state, action: PayloadAction<Account>) => {
             delete state.accounts[action.payload.id];
+        },
+        deleteCategory: (state, action: PayloadAction<Category>) => {
+            delete state.categories[action.payload.id];
         },
         addToCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) {
@@ -126,9 +135,11 @@ export const {
     addProduct,
     checkout,
     editGroup,
+    editCategory,
     editProduct,
     editAccount,
     deleteAccount,
+    deleteCategory,
     appendTransaction,
     setTransactions,
     addToCart,

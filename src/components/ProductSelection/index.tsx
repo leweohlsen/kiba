@@ -1,42 +1,23 @@
-import { Collapse, Select, Typography } from "antd";
+import { Collapse } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 
 import ProductGrid from "../ProductGrid";
 import { addToCart, selectCategories, selectProducts } from "../../app/events.slice";
 import ProductCreationModal from "../ProductCreationModal";
-import {
-    selectProductSearchTerm,
-    selectCurrentGroup,
-    setCurrentGroup,
-    setIsProductCreationVisible,
-    setIsCategoryCreationVisible,
-} from "../../app/ui.slice";
-import { Category, Group } from "../../app/types";
-import SearchField from "../SearchField";
-import { groupsColorPalette } from "../../app/constants";
+import { selectProductSearchTerm, setIsCategoryCreationVisible, setItemBeingEditedId } from "../../app/ui.slice";
+import { Category } from "../../app/types";
 
 import "./style.css";
 import CategoryCreationModal from "../CategoryCreationModal";
 
 const { Panel } = Collapse;
-const { Option } = Select;
-const { Title } = Typography;
 
 const ProductSelection = () => {
     const dispatch = useDispatch();
     const categories = useSelector(selectCategories);
     const products = useSelector(selectProducts);
-    const currentGroup = useSelector(selectCurrentGroup);
     const productSearchTerm = useSelector(selectProductSearchTerm);
-
-    // const genExtra = () => (
-    //     <UsergroupDeleteOutlined
-    //         onClick={(event) => {
-    //             event.stopPropagation();
-    //             // TODO dispatch();
-    //         }}
-    //     />
-    // );
 
     // const handleChange = (key: string) => {
     //     dispatch(setCurrentGroup(key));
@@ -69,7 +50,15 @@ const ProductSelection = () => {
                                     // fontWeight: "bold",
                                 }
                             }
-                            // extra={genExtra()}
+                            extra={
+                                <EditOutlined
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        dispatch(setIsCategoryCreationVisible(true));
+                                        dispatch(setItemBeingEditedId(category.id));
+                                    }}
+                                />
+                            }
                         >
                             <ProductGrid key={category.id} products={categoryProducts} />
                         </Panel>
