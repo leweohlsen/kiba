@@ -11,6 +11,7 @@ import {
     setIsProductCreationVisible,
     selectItemBeingEditedId,
     setItemBeingEditedId,
+    setNewProductImage,
 } from "../../app/ui.slice";
 import { useDispatchAndSaveEvent } from "../App";
 import { useForm } from "antd/lib/form/Form";
@@ -38,7 +39,7 @@ const ProductCreationModal: React.FC = () => {
 
     const onFinish = (product: Product) => {
         if (itemBeingEditedId) {
-            dispatchAndSaveEvent(editProduct(product));
+            dispatchAndSaveEvent(editProduct({ ...product, image: newProductImage || product.image }));
         } else {
             dispatchAndSaveEvent(addProduct({ ...product, id: newProductId, image: newProductImage }));
         }
@@ -48,6 +49,7 @@ const ProductCreationModal: React.FC = () => {
     const onClose = () => {
         dispatch(setIsProductCreationVisible(false));
         dispatch(setItemBeingEditedId(undefined));
+        dispatch(setNewProductImage(undefined));
         form.resetFields();
     };
 
@@ -77,16 +79,10 @@ const ProductCreationModal: React.FC = () => {
                     <Input />
                 </Form.Item>
                 <Form.Item name="image">
-                    {/* <Upload
-                        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                        listType="picture-card"
-                        fileList={[]}
-                        // onPreview={this.handlePreview}
-                        onChange={() => {}}
-                    >
-                        {uploadButton}
-                    </Upload> */}
-                    {newProductImage && <img height="200" src={"productimage://" + newProductImage} />}
+                    <img
+                        height="200"
+                        src={"productimage://" + (newProductImage || products[itemBeingEditedId]?.image)}
+                    />
                     <Button
                         onClick={() => {
                             window.electronAPI.selectProductImage(newProductId);
