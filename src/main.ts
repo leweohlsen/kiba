@@ -59,13 +59,15 @@ async function handleSelectProductImage(event: IpcMainEvent, productId: string) 
 const createWindow = (): void => {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        height: 600,
-        width: 800,
+        show: false,
         webPreferences: {
             contextIsolation: true,
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         },
     });
+
+    mainWindow.maximize();
+    mainWindow.show();
 
     ipcMain.handle("getTransactions", handleGetTransactions);
     ipcMain.handle("appendTransaction", handleAppendTransaction);
