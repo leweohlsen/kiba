@@ -14,15 +14,11 @@ import {
     setItemBeingEditedId,
 } from "../../app/ui.slice";
 import { Group } from "../../app/types";
-import SearchField from "../SearchField";
-import { groupsColorPalette } from "../../app/constants";
 
 import "./style.css";
 import GroupCreationModal from "../GroupCreationModal";
 
 const { Panel } = Collapse;
-const { Option } = Select;
-const { Title } = Typography;
 
 const AccountSelection = () => {
     const dispatch = useDispatch();

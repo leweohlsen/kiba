@@ -49,7 +49,7 @@ export const eventSlice = createSlice({
         checkout: (state, action: PayloadAction<Purchase>) => {
             const buyer = state.accounts[action.payload.customerId];
             const total =
-                action.payload.customPrice | calculatePurchaseTotal(action.payload.shoppingCart, state.products);
+                action.payload.customPrice || calculatePurchaseTotal(action.payload.shoppingCart, state.products);
             buyer.balance -= total;
             state.shoppingCart = initialState.shoppingCart;
             state.customerId = initialState.customerId;
