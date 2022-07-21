@@ -47,7 +47,7 @@ const TransactionsList: React.FC = () => {
         return (
             <div>
                 <span style={{ marginRight: "10px" }}>
-                    {customer.name} ({group.name}) kauft
+                    {customer.name} ({group?.name || "Keine Gruppe"}) kauft
                 </span>
                 <div style={{ padding: "10px" }}>
                     <ShoppingCart items={t.payload.shoppingCart} />

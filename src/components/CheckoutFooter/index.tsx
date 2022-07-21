@@ -57,7 +57,7 @@ const CheckoutFooter: React.FC = () => {
                 <Title level={5} style={{ marginBottom: 0 }}>
                     {account.name}
                 </Title>
-                <Text>{groups.find((g) => g.id === account.groupId).name}</Text>
+                <Text>{groups.find((g) => g.id === account.groupId)?.name || "Keine Gruppe"}</Text>
                 <Text>Kontostand: {account.balance.toFixed(2)}€</Text>
             </>
         );
