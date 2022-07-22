@@ -1,7 +1,12 @@
 import { Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { setAccountSearchTerm, setProductSearchTerm } from "../../app/ui.slice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    selectAccountSearchTerm,
+    selectProductSearchTerm,
+    setAccountSearchTerm,
+    setProductSearchTerm,
+} from "../../app/ui.slice";
 
 interface SearchFieldProps {
     type: string;
@@ -9,6 +14,11 @@ interface SearchFieldProps {
 
 const SearchField: React.FC<SearchFieldProps> = ({ type }) => {
     const dispatch = useDispatch();
+
+    const accountSearchTerm = useSelector(selectAccountSearchTerm);
+    const productSearchTerm = useSelector(selectProductSearchTerm);
+
+    const searchTerm = type === "accounts" ? accountSearchTerm : productSearchTerm;
 
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
         switch (type) {
@@ -25,7 +35,7 @@ const SearchField: React.FC<SearchFieldProps> = ({ type }) => {
 
     return (
         <div style={{ marginRight: "auto" }}>
-            <Input prefix={<SearchOutlined />} allowClear size="large" onChange={onChange} />
+            <Input prefix={<SearchOutlined />} allowClear size="large" onChange={onChange} value={searchTerm} />
         </div>
     );
 };

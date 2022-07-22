@@ -19,7 +19,7 @@ import ShoppingCart from "../ShoppingCart";
 import { useDispatchAndSaveEvent } from "../App";
 
 import "./style.css";
-import { selectCurrentMenuItem } from "../../app/ui.slice";
+import { selectCurrentMenuItem, setCurrentMenuItem, setProductSearchTerm } from "../../app/ui.slice";
 
 const { Text, Title } = Typography;
 
@@ -92,9 +92,11 @@ const CheckoutFooter: React.FC = () => {
                         style={{ width: "100%" }}
                         type="primary"
                         disabled={!customerId || !Object.keys(shoppingCart).length}
-                        onClick={() =>
-                            dispatchAndSaveEvent(checkout({ id: uuidv4(), customerId, shoppingCart, customPrice }))
-                        }
+                        onClick={() => {
+                            dispatchAndSaveEvent(checkout({ id: uuidv4(), customerId, shoppingCart, customPrice }));
+                            dispatch(setCurrentMenuItem("accounts"));
+                            dispatch(setProductSearchTerm(""));
+                        }}
                     >
                         Checkout
                     </Button>

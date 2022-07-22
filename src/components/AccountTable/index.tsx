@@ -1,7 +1,13 @@
 import { Table, Space, Tooltip, Button, Modal } from "antd";
 import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { setCurrentMenuItem, setIsAccountCreationVisible, setItemBeingEditedId } from "../../app/ui.slice";
+import {
+    setAccountSearchTerm,
+    setCurrentGroup,
+    setCurrentMenuItem,
+    setIsAccountCreationVisible,
+    setItemBeingEditedId,
+} from "../../app/ui.slice";
 import { deleteAccount, setCustomerId } from "../../app/events.slice";
 import { useDispatchAndSaveEvent } from "../App";
 import type { Account } from "../../app/types";
@@ -20,17 +26,17 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
 
     const showDeleteConfirm = (account: Account) => {
         confirm({
-          title: 'Sicher?',
-          icon: <ExclamationCircleOutlined />,
-          content: 'Soll dieses Konto wirklich gelöscht werden?',
-          okText: 'Ja',
-          okType: 'danger',
-          cancelText: 'Oops, nee',
-          onOk() {
-            dispatchAndSaveEvent(deleteAccount(account));
-          },
+            title: "Sicher?",
+            icon: <ExclamationCircleOutlined />,
+            content: "Soll dieses Konto wirklich gelöscht werden?",
+            okText: "Ja",
+            okType: "danger",
+            cancelText: "Oops, nee",
+            onOk() {
+                dispatchAndSaveEvent(deleteAccount(account));
+            },
         });
-      };
+    };
 
     const columns = [
         {
@@ -94,6 +100,8 @@ const AccountTable: React.FC<AccountTableProps> = ({ accounts }) => {
                     onClick: () => {
                         dispatch(setCustomerId(record.id));
                         dispatch(setCurrentMenuItem("products"));
+                        dispatch(setAccountSearchTerm(""));
+                        dispatch(setCurrentGroup(undefined));
                     },
                 };
             }}
