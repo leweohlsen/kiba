@@ -1,14 +1,15 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { MenuProps } from "antd";
 
 export type Group = {
     id: string;
     name: string;
+    isDeleted: boolean;
 };
 
 export type Category = {
     id: string;
     name: string;
+    isDeleted: boolean;
 };
 
 export type Account = {
@@ -16,6 +17,7 @@ export type Account = {
     name: string;
     groupId?: string;
     balance: number;
+    isDeleted: boolean;
 };
 
 export type Product = {
@@ -25,6 +27,7 @@ export type Product = {
     categoryId: string;
     price: number;
     image: string;
+    isDeleted: boolean;
 };
 
 export type Purchase = {

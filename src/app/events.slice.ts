@@ -81,10 +81,13 @@ export const eventSlice = createSlice({
             };
         },
         deleteAccount: (state, action: PayloadAction<Account>) => {
-            delete state.accounts[action.payload.id];
+            state.accounts[action.payload.id].isDeleted = true;
         },
         deleteCategory: (state, action: PayloadAction<Category>) => {
-            delete state.categories[action.payload.id];
+            state.categories[action.payload.id].isDeleted = true;
+        },
+        deleteProduct: (state, action: PayloadAction<Product>) => {
+            state.products[action.payload.id].isDeleted = true;
         },
         addToCart: (state, action: PayloadAction<string>) => {
             if (!state.shoppingCart[action.payload]) {
@@ -140,6 +143,7 @@ export const {
     editAccount,
     deleteAccount,
     deleteCategory,
+    deleteProduct,
     appendTransaction,
     setTransactions,
     addToCart,
@@ -148,7 +152,7 @@ export const {
     setCustomPrice,
 } = actionCreatorsWithDates(eventSlice.actions);
 
-export const selectAccounts = (state: RootState) => Object.values(state.events.accounts);
+export const selectAccounts = (state: RootState) => state.events.accounts;
 export const selectGroups = (state: RootState) => Object.values(state.events.groups);
 export const selectTransactions = (state: RootState) => state.events.transactions;
 export const selectCategories = (state: RootState) => Object.values(state.events.categories);

@@ -7,6 +7,7 @@ import {
     FolderAddOutlined,
     FileAddOutlined,
     EditOutlined,
+    DeleteOutlined,
     UserDeleteOutlined,
 } from "@ant-design/icons";
 import { selectAccounts, selectGroups, selectTransactions } from "../../app/events.slice";
@@ -36,13 +37,15 @@ const TransactionsList: React.FC = () => {
                 return <EditOutlined />;
             case "events/deleteAccount":
                 return <UserDeleteOutlined />;
+            case "events/deleteProduct":
+                return <DeleteOutlined />;
             default:
                 return null;
         }
     };
 
     const renderCheckoutTransaction = (t: Transaction<Purchase>) => {
-        const customer = accounts.find((a) => a.id === t.payload.customerId);
+        const customer = accounts[t.payload.customerId];
         const group = groups.find((g) => g.id === customer.groupId);
         return (
             <div>
@@ -90,6 +93,10 @@ const TransactionsList: React.FC = () => {
         return `Produkt ${t.payload.name} für ${t.payload.price.toFixed(2)}€ hinzugefügt`;
     };
 
+    const renderDeleteProductTransaction = (t: Transaction<Product>) => {
+        return `Produkt ${t.payload.name} gelöscht`;
+    };
+
     const renderTransactionPayload = (transaction: Transaction<any>) => {
         switch (transaction.type) {
             case "events/checkout":
@@ -110,6 +117,8 @@ const TransactionsList: React.FC = () => {
                 return renderEditGroupTransaction(transaction);
             case "events/editProduct":
                 return renderEditProductTransaction(transaction);
+            case "events/deleteProduct":
+                return renderDeleteProductTransaction(transaction);
             default:
                 return JSON.stringify(transaction);
         }

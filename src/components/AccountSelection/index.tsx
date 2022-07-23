@@ -17,13 +17,14 @@ import { Group } from "../../app/types";
 
 import "./style.css";
 import GroupCreationModal from "../GroupCreationModal";
+import { selectActiveAccounts } from "../../app/selectors";
 
 const { Panel } = Collapse;
 
 const AccountSelection = () => {
     const dispatch = useDispatch();
     const groups = useSelector(selectGroups);
-    const accounts = useSelector(selectAccounts);
+    const activeAccounts = useSelector(selectActiveAccounts);
     const accountSearchTerm = useSelector(selectAccountSearchTerm);
     const currentGroup = useSelector(selectCurrentGroup);
 
@@ -42,7 +43,7 @@ const AccountSelection = () => {
                 className="account-selection-collapse"
             >
                 {[...groups, { id: null, name: "Keine Gruppe" }].map((group: Group) => {
-                    const groupAccounts = accounts
+                    const groupAccounts = activeAccounts
                         .filter((a) => a.groupId === group.id)
                         .filter(
                             (a) => !accountSearchTerm || a.name.toLowerCase().includes(accountSearchTerm.toLowerCase())

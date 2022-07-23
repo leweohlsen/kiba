@@ -7,16 +7,24 @@ import { calculatePurchaseTotal } from "./util";
 export const selectCurrentGroupAccounts = createSelector(
     [selectAccounts, selectCurrentGroup],
     (accounts, currentGroup) => {
-        return accounts.filter((a) => a.groupId === currentGroup);
+        return Object.values(accounts).filter((a) => a.groupId === currentGroup);
     }
 );
+
+export const selectActiveAccounts = createSelector([selectAccounts], (accounts) => {
+    return Object.values(accounts).filter((a) => !a.isDeleted);
+});
+
+export const selectActiveProducts = createSelector([selectProducts], (products) => {
+    return Object.values(products).filter((p) => !p.isDeleted);
+});
 
 export const selectCartTotal = createSelector([selectShoppingCart, selectProducts], (shoppingCart, products) => {
     return calculatePurchaseTotal(shoppingCart, products);
 });
 
-export const selectNumAccounts = createSelector([selectAccounts], (accounts) => {
-    return accounts.length;
+export const selectNumAccounts = createSelector([selectActiveAccounts], (activeAccounts) => {
+    return activeAccounts.length;
 });
 
 export const selectTotalBankBalance = createSelector([selectAccounts], (accounts) => {

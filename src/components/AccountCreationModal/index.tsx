@@ -27,7 +27,7 @@ const AccountCreationModal = () => {
 
     useEffect(() => {
         if (!itemBeingEditedId) form.resetFields();
-        form.setFieldsValue(accounts.find((a) => a.id === itemBeingEditedId));
+        form.setFieldsValue(accounts[itemBeingEditedId]);
     }, [itemBeingEditedId]);
 
     const onFinish = (account: Account) => {

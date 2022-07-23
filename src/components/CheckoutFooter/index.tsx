@@ -51,7 +51,7 @@ const CheckoutFooter: React.FC = () => {
 
     const renderBuyerAccountInfo = (customerId: string) => {
         if (!customerId) return;
-        const account = accounts.find((a) => a.id === customerId);
+        const account = accounts[customerId];
         return (
             <>
                 <Title level={5} style={{ marginBottom: 0 }}>
@@ -65,7 +65,7 @@ const CheckoutFooter: React.FC = () => {
 
     const renderTotalCheckout = (customerId: string, currentTotal: number, shoppingCart: Record<string, number>) => {
         if (!customerId) return;
-        const account = accounts.find((a) => a.id === customerId);
+        const account = accounts[customerId];
         const price = customPrice ? customPrice : currentTotal;
         const balanceAfterCheckout = account.balance - price;
         return (

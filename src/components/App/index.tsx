@@ -1,7 +1,6 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Product, Transaction } from "../../app/types";
-import { useSelector, useStore, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import type { Transaction } from "../../app/types";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 import { selectIsTransactionsLoaded, setNewProductImage } from "../../app/ui.slice";
 import { appendTransaction } from "../../app/events.slice";
 import Layout from "../Layout";

@@ -1,7 +1,7 @@
 {
     "name": "kiba",
     "productName": "kiba",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "event-driven kiosk and bank application",
     "main": ".webpack/main",
     "scripts": {
