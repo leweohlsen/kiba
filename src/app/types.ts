@@ -41,6 +41,18 @@ export interface Transaction<P> extends PayloadAction<P> {
     timestamp: number;
 }
 
+export type DailySales = {
+    timestamp: number;
+    sales: number;
+};
+
+export type Series = {
+    id: string;
+    label: string;
+    data: DailySales[];
+};
+
 export type Stats = {
     totalTurnover: number;
-}
+    dailyCategorySales: Series[];
+};

@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { selectAccounts, selectGroups, selectProducts, selectShoppingCart, selectTransactions } from "./events.slice";
-import { Purchase, Transaction } from "./types";
+import { Purchase, Transaction, Series } from "./types";
 import { selectCurrentGroup } from "./ui.slice";
 import { calculatePurchaseTotal } from "./util";
 
@@ -33,4 +33,50 @@ export const selectTotalBankBalance = createSelector([selectAccounts], (accounts
 
 export const selectCheckoutTransactions = createSelector([selectTransactions], (transactions) => {
     return transactions.filter((t) => t.type === "events/checkout") as Transaction<Purchase>[];
+});
+
+export const selectDailyProductSales = createSelector([selectTransactions], (transactions) => {
+    const data: Series[] = [
+        {
+            id: "a",
+            label: "Chips",
+            data: [
+                {
+                    timestamp: 1656626400000,
+                    sales: 6,
+                },
+                {
+                    timestamp: 1656712800000,
+                    sales: 12,
+                },
+                                {
+                    timestamp: 1656799200000,
+                    sales: 15,
+                },
+                {
+                    timestamp: 1656898700000,
+                    sales: 15,
+                },
+            ],
+        },
+        {
+            id: "b",
+            label: "Schokoriegel",
+            data: [
+                {
+                    timestamp: 1656626400000,
+                    sales: 12,
+                },
+                {
+                    timestamp: 1656712800000,
+                    sales: 24,
+                },
+                {
+                    timestamp: 1656799200000,
+                    sales: 10,
+                },
+            ],
+        },
+    ];
+    return data;
 });

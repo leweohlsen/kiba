@@ -34,4 +34,5 @@ Please refer to the [electron-forge](https://www.electronforge.io) docs for inst
 * [x] Allow editing of groups, accounts, categories and products
 * [x] Create a shopping cart that is visible 
 * [x] Allow use of a USB barcode scanning device by catching EAN keyboard inputs in the product view
+* [ ] i18n
 * [ ] In case the event sourcing gets slow with many transactions, maybe implement snapshotting so we don't have to replay *all* events on every application start

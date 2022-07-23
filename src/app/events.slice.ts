@@ -1,6 +1,5 @@
 import { createSlice, ActionCreator } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { Group, Account, Category, Product, Purchase, Transaction, Stats } from "./types";
+import { Group, Account, Category, Product, Purchase, Transaction, Stats, Series } from "./types";
 import { calculatePurchaseTotal } from "./util";
 import { RootState } from "./store";
 
@@ -27,6 +26,7 @@ export const initialState: EventsState = {
     customerId: undefined,
     stats: {
         totalTurnover: 0,
+        dailyCategorySales: [],
     },
 };
 
@@ -34,19 +34,19 @@ export const eventSlice = createSlice({
     name: "events",
     initialState,
     reducers: {
-        addGroup: (state, action: PayloadAction<Group>) => {
+        addGroup: (state, action: Transaction<Group>) => {
             state.groups[action.payload.id] = { ...action.payload };
         },
-        addAccount: (state, action: PayloadAction<Account>) => {
+        addAccount: (state, action: Transaction<Account>) => {
             state.accounts[action.payload.id] = { ...action.payload };
         },
-        addCategory: (state, action: PayloadAction<Category>) => {
+        addCategory: (state, action: Transaction<Category>) => {
             state.categories[action.payload.id] = { ...action.payload };
         },
-        addProduct: (state, action: PayloadAction<Product>) => {
+        addProduct: (state, action: Transaction<Product>) => {
             state.products[action.payload.id] = { ...action.payload };
         },
-        checkout: (state, action: PayloadAction<Purchase>) => {
+        checkout: (state, action: Transaction<Purchase>) => {
             const buyer = state.accounts[action.payload.customerId];
             const total =
                 action.payload.customPrice || calculatePurchaseTotal(action.payload.shoppingCart, state.products);
@@ -54,49 +54,71 @@ export const eventSlice = createSlice({
             state.shoppingCart = initialState.shoppingCart;
             state.customerId = initialState.customerId;
             state.customPrice = undefined;
+
             state.stats.totalTurnover += total;
+            Object.entries(action.payload.shoppingCart).forEach(([productId, quantity]) => {
+                const product = state.products[productId];
+                const category = state.categories[product.categoryId];
+                const series = state.stats.dailyCategorySales.find((c) => c.id === category.id);
+                const timestamp = new Date(action.timestamp).setUTCHours(0, 0, 0, 0);
+                if (!series) {
+                    const newSeries: Series = {
+                        id: category.id,
+                        label: category.name,
+                        data: [{ timestamp, sales: quantity }],
+                    };
+                    state.stats.dailyCategorySales.push(newSeries);
+                } else {
+                    const day = series.data.find((s) => s.timestamp=== timestamp);
+                    if (!day) {
+                        series.data.push({ timestamp, sales: quantity });
+                    } else {
+                        day.sales += quantity;
+                    }
+                }
+            });
         },
-        editGroup: (state, action: PayloadAction<Group>) => {
+        editGroup: (state, action: Transaction<Group>) => {
             state.groups[action.payload.id] = {
                 ...state.groups[action.payload.id],
                 ...action.payload,
             };
         },
-        editCategory: (state, action: PayloadAction<Category>) => {
+        editCategory: (state, action: Transaction<Category>) => {
             state.categories[action.payload.id] = {
                 ...state.categories[action.payload.id],
                 ...action.payload,
             };
         },
-        editProduct: (state, action: PayloadAction<Product>) => {
+        editProduct: (state, action: Transaction<Product>) => {
             state.products[action.payload.id] = {
                 ...state.products[action.payload.id],
                 ...action.payload,
             };
         },
-        editAccount: (state, action: PayloadAction<Account>) => {
+        editAccount: (state, action: Transaction<Account>) => {
             state.accounts[action.payload.id] = {
                 ...state.accounts[action.payload.id],
                 ...action.payload,
             };
         },
-        deleteAccount: (state, action: PayloadAction<Account>) => {
+        deleteAccount: (state, action: Transaction<Account>) => {
             state.accounts[action.payload.id].isDeleted = true;
         },
-        deleteCategory: (state, action: PayloadAction<Category>) => {
+        deleteCategory: (state, action: Transaction<Category>) => {
             state.categories[action.payload.id].isDeleted = true;
         },
-        deleteProduct: (state, action: PayloadAction<Product>) => {
+        deleteProduct: (state, action: Transaction<Product>) => {
             state.products[action.payload.id].isDeleted = true;
         },
-        addToCart: (state, action: PayloadAction<string>) => {
+        addToCart: (state, action: Transaction<string>) => {
             if (!state.shoppingCart[action.payload]) {
                 state.shoppingCart[action.payload] = 1;
             } else {
                 state.shoppingCart[action.payload] += 1;
             }
         },
-        removeFromCart: (state, action: PayloadAction<string>) => {
+        removeFromCart: (state, action: Transaction<string>) => {
             if (!state.shoppingCart[action.payload]) return;
             if (state.shoppingCart[action.payload] === 1) {
                 delete state.shoppingCart[action.payload];
@@ -104,16 +126,16 @@ export const eventSlice = createSlice({
                 state.shoppingCart[action.payload] -= 1;
             }
         },
-        appendTransaction: (state, action: PayloadAction<Transaction<any>>) => {
+        appendTransaction: (state, action: Transaction<Transaction<any>>) => {
             state.transactions.push(action.payload);
         },
-        setTransactions: (state, action: PayloadAction<Transaction<any>[]>) => {
+        setTransactions: (state, action: Transaction<Transaction<any>[]>) => {
             state.transactions = action.payload;
         },
-        setCustomerId: (state, action: PayloadAction<string>) => {
+        setCustomerId: (state, action: Transaction<string>) => {
             state.customerId = action.payload;
         },
-        setCustomPrice: (state, action: PayloadAction<number>) => {
+        setCustomPrice: (state, action: Transaction<number>) => {
             state.customPrice = action.payload;
         },
     },

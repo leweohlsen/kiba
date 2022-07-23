@@ -6,3 +6,4 @@ export const calculatePurchaseTotal = (shoppingCart: Record<string, number>, pro
         return total + product.price * quantity;
     }, 0);
 };
+
