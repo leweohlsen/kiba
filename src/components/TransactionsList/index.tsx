@@ -11,7 +11,7 @@ import {
     UserDeleteOutlined,
 } from "@ant-design/icons";
 import { selectAccounts, selectGroups, selectTransactions } from "../../app/events.slice";
-import { Transaction, Purchase, Account, Group, Product } from "../../app/types";
+import { Transaction, Purchase, Account, Group, Product, Category } from "../../app/types";
 import ShoppingCart from "../ShoppingCart";
 
 const TransactionsList: React.FC = () => {
@@ -34,6 +34,7 @@ const TransactionsList: React.FC = () => {
             case "events/editAccount":
             case "events/editGroup":
             case "events/editProduct":
+            case "events/editCategory":
                 return <EditOutlined />;
             case "events/deleteAccount":
                 return <UserDeleteOutlined />;
@@ -77,6 +78,10 @@ const TransactionsList: React.FC = () => {
         return `Gruppe ${t.payload.name} bearbeitet`;
     };
 
+    const renderEditCategoryTransaction = (t: Transaction<Category>) => {
+        return `Kategorie ${t.payload.name} bearbeitet`;
+    };
+
     const renderDeleteUserTransaction = (t: Transaction<Account>) => {
         return `Konto ${t.payload.name} gelöscht`;
     };
@@ -117,6 +122,8 @@ const TransactionsList: React.FC = () => {
                 return renderEditGroupTransaction(transaction);
             case "events/editProduct":
                 return renderEditProductTransaction(transaction);
+            case "events/editCategory":
+                return renderEditCategoryTransaction(transaction);
             case "events/deleteProduct":
                 return renderDeleteProductTransaction(transaction);
             default:
