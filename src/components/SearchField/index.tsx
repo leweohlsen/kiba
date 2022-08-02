@@ -39,7 +39,7 @@ const SearchField: React.FC<SearchFieldProps> = ({ type }) => {
 
     useEffect(() => {
         inputRef.current.focus();
-    }, [accountSearchTerm, productSearchTerm, type])
+    }, [accountSearchTerm, productSearchTerm])
 
     return (
         <div style={{ marginRight: "auto" }}>
