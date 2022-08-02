@@ -1,7 +1,7 @@
-import type { InputRef } from 'antd';
+import type { InputRef } from "antd";
 
 import { Input } from "antd";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -36,10 +36,6 @@ const SearchField: React.FC<SearchFieldProps> = ({ type }) => {
                 break;
         }
     };
-
-    useEffect(() => {
-        inputRef.current.focus();
-    }, [accountSearchTerm, productSearchTerm])
 
     return (
         <div style={{ marginRight: "auto" }}>
