@@ -10,6 +10,7 @@ import {
     setAccountSearchTerm,
     setProductSearchTerm,
 } from "../../app/ui.slice";
+import { selectCustomerId } from "../../app/events.slice";
 
 interface SearchFieldProps {
     type: string;
@@ -20,6 +21,7 @@ const SearchField: React.FC<SearchFieldProps> = ({ type }) => {
 
     const accountSearchTerm = useSelector(selectAccountSearchTerm);
     const productSearchTerm = useSelector(selectProductSearchTerm);
+    const customerId = useSelector(selectCustomerId);
     const searchTerm = type === "accounts" ? accountSearchTerm : productSearchTerm;
 
     const inputRef = useRef<InputRef>(null);
@@ -36,6 +38,10 @@ const SearchField: React.FC<SearchFieldProps> = ({ type }) => {
                 break;
         }
     };
+
+    useEffect(() => {
+        inputRef.current.blur();
+    }, [customerId])
 
     return (
         <div style={{ marginRight: "auto" }}>
