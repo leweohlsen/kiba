@@ -1,0 +1,97 @@
+name: Release
+permissions:
+  contents: write
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  create_release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_id: ${{ steps.create_release.outputs.id }}
+    steps:
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build_macos:
+    name: Build macOS Installer
+    needs: create_release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Get project metadata
+        run: |
+          echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_ENV
+          echo "NAME=$(node -p \"require('./package.json').name\")" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: npm ci
+      - name: Make macOS build
+        run: npm run make
+      - name: Upload macOS assets
+        shell: bash
+        env:
+          UPLOAD_URL: ${{ needs.create_release.outputs.upload_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for f in out/make/*.dmg; do
+            echo "Uploading $f..."
+            curl -s --fail -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/x-apple-diskimage" \
+              --data-binary @"$f" \
+              "$UPLOAD_URL?name=$(basename "$f")"
+          done
+          for f in out/make/zip/darwin/*/*.zip; do
+            echo "Uploading $f..."
+            curl -s --fail -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/zip" \
+              --data-binary @"$f" \
+              "$UPLOAD_URL?name=$(basename "$f")"
+          done
+
+  build_windows:
+    name: Build Windows Installer
+    needs: create_release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Get project metadata
+        run: |
+          echo "VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_ENV
+          echo "NAME=$(node -p \"require('./package.json').name\")" >> $GITHUB_ENV
+      - name: Install dependencies
+        run: npm ci
+      - name: Make Windows build
+        run: npm run make
+      - name: Upload Windows EXE
+        env:
+          UPLOAD_URL: ${{ needs.create_release.outputs.upload_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          path="out/make/squirrel/win32-x64/${NAME} Setup ${VERSION}.exe"
+          echo "Uploading ${path}"
+          curl -s --fail -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @"${path}" \
+            "${UPLOAD_URL}?name=$(basename "${path}")"
