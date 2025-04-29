@@ -89,16 +89,27 @@ jobs:
         run: npm install
       - name: Make Windows build
         run: npm run make
+      - name: Find Windows EXE
+        id: find_windows_exe
+        # Use Bash to locate the generated EXE file
+        shell: bash
+        run: |
+          echo "Looking for Windows EXE in out/make..."
+          exe=$(find out/make -type f -iname '*.exe' | head -n1)
+          if [ -z "$exe" ]; then
+            echo "Error: No .exe file found under out/make" >&2
+            exit 1
+          fi
+          echo "Found Windows EXE: $exe"
+          echo "windows_asset_path=$exe" >> $GITHUB_OUTPUT
+          echo "windows_asset_name=$(basename "$exe")" >> $GITHUB_OUTPUT
+
       - name: Upload Windows EXE
-        # Use the official GitHub Action to upload the Windows installer asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # The upload_url output from the create_release job, including the template is fine
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          # Path to the generated Windows EXE (contains spaces)
-          asset_path: "out/make/squirrel/win32-x64/${{ env.NAME }} Setup ${{ env.VERSION }}.exe"
-          # Filename as it should appear in the release assets
-          asset_name: "${{ env.NAME }} Setup ${{ env.VERSION }}.exe"
+          asset_path: ${{ steps.find_windows_exe.outputs.windows_asset_path }}
+          asset_name: ${{ steps.find_windows_exe.outputs.windows_asset_name }}
           asset_content_type: application/octet-stream
