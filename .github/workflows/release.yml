@@ -90,17 +90,15 @@ jobs:
       - name: Make Windows build
         run: npm run make
       - name: Upload Windows EXE
+        # Use the official GitHub Action to upload the Windows installer asset
+        uses: actions/upload-release-asset@v1
         env:
-          UPLOAD_URL: ${{ needs.create_release.outputs.upload_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
-          # Strip off the templated query part ({?name,label}) from the upload URL
-          UPLOAD_URL=${UPLOAD_URL%\{*}
-          path="out/make/squirrel/win32-x64/${NAME} Setup ${VERSION}.exe"
-          echo "Uploading ${path}"
-          curl -s --fail -X POST \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @"${path}" \
-            "${UPLOAD_URL}?name=$(basename "${path}")"
+        with:
+          # The upload_url output from the create_release job, including the template is fine
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          # Path to the generated Windows EXE (contains spaces)
+          asset_path: "out/make/squirrel/win32-x64/${{ env.NAME }} Setup ${{ env.VERSION }}.exe"
+          # Filename as it should appear in the release assets
+          asset_name: "${{ env.NAME }} Setup ${{ env.VERSION }}.exe"
+          asset_content_type: application/octet-stream
