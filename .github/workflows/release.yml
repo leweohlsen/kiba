@@ -94,6 +94,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
+          # Strip off the templated query part ({?name,label}) from the upload URL
+          UPLOAD_URL=${UPLOAD_URL%\{*}
           path="out/make/squirrel/win32-x64/${NAME} Setup ${VERSION}.exe"
           echo "Uploading ${path}"
           curl -s --fail -X POST \
