@@ -26,6 +26,12 @@ and the local development server is started with
 ```
 npm start
 ```
+For a distributable build, use electron-forge to package and make installers:
+```
+npm run package   # creates a packaged app in the out/ directory
+npm run make      # generates platform-specific installers in out/make/
+```
+The resulting installers (e.g., .dmg, .zip, .deb, .rpm, or Windows installer) will be placed in out/make.
 
 Please refer to the [electron-forge](https://www.electronforge.io) docs for instructions on how to create a distributable build.
 

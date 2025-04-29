@@ -5,7 +5,9 @@ module.exports = [
     use: 'node-loader',
   },
   {
+    // Exclude node_modules to avoid parsing pure JS packages (e.g., immer, uuid)
     test: /\.(m?js|node)$/,
+    exclude: /node_modules/,
     parser: { amd: false },
     use: {
       loader: '@marshallofsound/webpack-asset-relocator-loader',

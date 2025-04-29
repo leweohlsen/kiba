@@ -4,7 +4,8 @@ import { Provider } from "react-redux"
 
 import App from "./components/App"
 import { store } from "./app/store"
-import "antd/dist/antd.css"
+// For antd v5, import reset styles
+import "antd/dist/reset.css"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 
