@@ -50,6 +50,8 @@ jobs:
           UPLOAD_URL: ${{ needs.create_release.outputs.upload_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Strip off the templated query part ({?name,label}) from the upload URL
+          UPLOAD_URL=${UPLOAD_URL%\{*}
           for f in out/make/*.dmg; do
             echo "Uploading $f..."
             curl -s --fail -X POST \
