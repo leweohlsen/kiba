@@ -1,0 +1,8 @@
+post_install() {
+  chmod 755 /usr/lib/kiba 2>/dev/null || true
+  chmod 755 /usr/lib/kiba/kiba 2>/dev/null || true
+}
+
+post_upgrade() {
+  post_install
+}

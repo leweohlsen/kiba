@@ -87,3 +87,8 @@ typings/
 
 # Electron-Forge
 out/
+
+# Arch package build output
+pkg/
+src/npm-cache/
+*.pkg.tar.zst

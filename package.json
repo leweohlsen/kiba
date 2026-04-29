@@ -8,6 +8,7 @@
         "start": "electron-forge start",
         "package": "electron-forge package",
         "make": "electron-forge package && electron-forge make",
+        "make:linux-zip": "electron-forge package && electron-forge make --targets=@electron-forge/maker-zip",
         "publish": "electron-forge publish",
         "lint": "eslint --ext .ts .",
         "test": "jest"
@@ -21,7 +22,10 @@
     "config": {
         "forge": {
             "packagerConfig": {
-                "icon": "src/assets/macos_icon.icns"
+                "icon": "src/assets/icon",
+                "extraResource": [
+                    "src/assets/icon_x4.png"
+                ]
             },
             "makers": [
                 {
@@ -36,7 +40,8 @@
                 {
                     "name": "@electron-forge/maker-zip",
                     "platforms": [
-                        "darwin"
+                        "darwin",
+                        "linux"
                     ]
                 },
                 {

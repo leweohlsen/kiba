@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=kiba
+Comment=Kiosk and bank system for accounts, products, and transactions
+Exec=/usr/bin/kiba
+Icon=kiba
+Terminal=false
+Categories=Office;Finance;
+StartupWMClass=kiba

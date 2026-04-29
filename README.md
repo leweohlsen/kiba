@@ -1,4 +1,4 @@
-![alt text](https://github.com/leweohlsen/kiba/blob/main/src/assets/macos_icon_256.png)
+![kiba icon](src/assets/icon.png)
 
 # kiba
 
@@ -28,8 +28,10 @@ npm start
 ```
 For a distributable build, use electron-forge to package and make installers:
 ```
-npm run package   # creates a packaged app in the out/ directory
-npm run make      # generates platform-specific installers in out/make/
+npm run package         # creates a packaged app in the out/ directory
+npm run make            # generates platform-specific installers in out/make/
+npm run make:linux-zip  # creates a Linux zip without deb/rpm tool requirements
+makepkg -si             # builds and installs an Arch Linux package
 ```
 The resulting installers (e.g., .dmg, .zip, .deb, .rpm, or Windows installer) will be placed in out/make.
 
