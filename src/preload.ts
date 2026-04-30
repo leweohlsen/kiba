@@ -5,8 +5,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 interface ElectronAPI {
     appendTransaction(transaction: Transaction<any>): void;
     getTransactions(): Promise<Transaction<any>[]>;
-    selectProductImage(productId: string): void;
-    updateProductImage: (channel: string, func: (event: string, data: string) => void) => void;
+    fetchProductImage(productId: string, query: string): Promise<string>;
 }
 
 declare global {
@@ -18,10 +17,7 @@ declare global {
 const electronAPI: ElectronAPI = {
     appendTransaction: (transaction) => ipcRenderer.invoke("appendTransaction", transaction),
     getTransactions: () => ipcRenderer.invoke("getTransactions"),
-    selectProductImage: (productId: string) => ipcRenderer.send("selectProductImage", productId),
-    updateProductImage: (channel: any, func: any) => {
-        ipcRenderer.on(channel, func);
-    },
+    fetchProductImage: (productId: string, query: string) => ipcRenderer.invoke("fetchProductImage", productId, query),
 };
 
 contextBridge.exposeInMainWorld("electronAPI", electronAPI);

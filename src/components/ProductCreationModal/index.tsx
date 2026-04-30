@@ -1,7 +1,6 @@
-import { Modal, Form, Input, Button, Upload, InputNumber, Select } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Modal, Form, Input, Button, InputNumber, Select, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Product } from "../../app/types";
 import { selectCategories, addProduct, editProduct, selectProducts } from "../../app/events.slice";
@@ -29,8 +28,11 @@ const ProductCreationModal: React.FC = () => {
     const products = useSelector(selectProducts);
 
     const [form] = useForm<Product>();
+    const productName = Form.useWatch("name", form);
+    const productEan = Form.useWatch("ean", form);
 
-    const newProductId = uuidv4();
+    const [newProductId, setNewProductId] = useState(uuidv4());
+    const [isFetchingImage, setIsFetchingImage] = useState(false);
 
     useEffect(() => {
         if (!itemBeingEditedId) form.resetFields();
@@ -51,18 +53,36 @@ const ProductCreationModal: React.FC = () => {
         dispatch(setItemBeingEditedId(undefined));
         dispatch(setNewProductImage(undefined));
         form.resetFields();
+        setNewProductId(uuidv4());
     };
 
     // const onFinishFailed = (errorInfo: any) => {
     //   console.log('Failed:', errorInfo);
     // };
 
-    const uploadButton = (
-        <div>
-            <PlusOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </div>
-    );
+    const fetchProductImage = async () => {
+        const searchQuery = [form.getFieldValue("name"), form.getFieldValue("ean")].filter(Boolean).join(" ");
+        if (!searchQuery) {
+            message.warning("Bitte erst einen Namen oder EAN eingeben.");
+            return;
+        }
+
+        setIsFetchingImage(true);
+        try {
+            const productImage = await window.electronAPI.fetchProductImage(
+                itemBeingEditedId || newProductId,
+                searchQuery
+            );
+            dispatch(setNewProductImage(productImage));
+        } catch (error) {
+            console.error(error);
+            message.error("Produktbild konnte nicht geladen werden.");
+        } finally {
+            setIsFetchingImage(false);
+        }
+    };
+
+    const productImage = newProductImage || products[itemBeingEditedId]?.image;
 
     return (
         <Modal title="Produkt erstellen" visible={isProductCreationVisible} onCancel={onClose} footer={null}>
@@ -79,16 +99,9 @@ const ProductCreationModal: React.FC = () => {
                     <Input />
                 </Form.Item>
                 <Form.Item name="image">
-                    <img
-                        height="200"
-                        src={"productimage://" + (newProductImage || products[itemBeingEditedId]?.image)}
-                    />
-                    <Button
-                        onClick={() => {
-                            window.electronAPI.selectProductImage(newProductId);
-                        }}
-                    >
-                        Upload image
+                    {productImage && <img height="200" src={"productimage://" + productImage} />}
+                    <Button onClick={fetchProductImage} loading={isFetchingImage} disabled={!productName && !productEan}>
+                        Produktbild suchen
                     </Button>
                 </Form.Item>
                 <Form.Item label="Name" name="name" rules={[{ required: true, message: "Bitte Name eingeben!" }]}>

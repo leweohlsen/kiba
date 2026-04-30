@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog, protocol, IpcMainEvent } from "electron";
+import { app, BrowserWindow, ipcMain, protocol, type IpcMainInvokeEvent } from "electron";
 import path from "path";
 import fs from "fs";
 import readline from "readline";
@@ -49,21 +49,90 @@ async function handleGetTransactions() {
     return transactionList;
 }
 
-async function handleSelectProductImage(event: IpcMainEvent, productId: string) {
-    const { filePaths } = await dialog.showOpenDialog({
-        properties: ["openFile"],
-        filters: [{ name: "Images", extensions: ["png", "jpg", "jpeg"] }],
+type DuckDuckGoImageResult = {
+    image?: string;
+    thumbnail?: string;
+};
+
+async function fetchFirstImageUrl(query: string): Promise<string> {
+    const encodedQuery = encodeURIComponent(query);
+    const searchPageUrl = `https://duckduckgo.com/?q=${encodedQuery}&iax=images&ia=images`;
+    const searchPageResponse = await fetch(searchPageUrl, {
+        headers: { "User-Agent": "Mozilla/5.0" },
     });
-    const filePath = filePaths[0];
-    const targetFileName = productId + path.extname(filePath);
-    const productImageDir = path.join(app.getPath("userData"), "product_images");
-    if (!fs.existsSync(productImageDir)) {
-        await fs.promises.mkdir(productImageDir);
+
+    if (!searchPageResponse.ok) {
+        throw new Error(`Image search failed with status ${searchPageResponse.status}`);
     }
+
+    const searchPage = await searchPageResponse.text();
+    const vqd = searchPage.match(/vqd=['"]?([^'"&]+)['"]?/)?.[1];
+    if (!vqd) {
+        throw new Error("Could not read image search token");
+    }
+
+    const imageSearchParams = new URLSearchParams({
+        l: "wt-wt",
+        o: "json",
+        q: query,
+        vqd,
+        f: ",,,",
+        p: "1",
+    });
+    const imageSearchResponse = await fetch(`https://duckduckgo.com/i.js?${imageSearchParams.toString()}`, {
+        headers: {
+            Accept: "application/json",
+            Referer: searchPageUrl,
+            "User-Agent": "Mozilla/5.0",
+        },
+    });
+
+    if (!imageSearchResponse.ok) {
+        throw new Error(`Image search API failed with status ${imageSearchResponse.status}`);
+    }
+
+    const imageSearch = (await imageSearchResponse.json()) as { results?: DuckDuckGoImageResult[] };
+    const imageUrl = imageSearch.results?.[0]?.image || imageSearch.results?.[0]?.thumbnail;
+    if (!imageUrl) {
+        throw new Error("Image search returned no results");
+    }
+
+    return imageUrl;
+}
+
+function getImageExtension(contentType: string | null, imageUrl: string): string {
+    if (contentType?.includes("image/png")) return ".png";
+    if (contentType?.includes("image/webp")) return ".webp";
+    if (contentType?.includes("image/gif")) return ".gif";
+    if (contentType?.includes("image/jpeg")) return ".jpg";
+
+    const pathname = new URL(imageUrl).pathname;
+    const extension = path.extname(pathname).toLowerCase();
+    return [".png", ".jpg", ".jpeg", ".webp", ".gif"].includes(extension) ? extension : ".jpg";
+}
+
+async function handleFetchProductImage(_: IpcMainInvokeEvent, productId: string, query: string): Promise<string> {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+        throw new Error("Product image search query is empty");
+    }
+
+    const imageUrl = await fetchFirstImageUrl(trimmedQuery);
+    const imageResponse = await fetch(imageUrl, {
+        headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    if (!imageResponse.ok) {
+        throw new Error(`Image download failed with status ${imageResponse.status}`);
+    }
+
+    const targetFileName = productId + getImageExtension(imageResponse.headers.get("content-type"), imageUrl);
+    const productImageDir = path.join(app.getPath("userData"), "product_images");
+    await fs.promises.mkdir(productImageDir, { recursive: true });
     const targetFilePath = path.join(productImageDir, targetFileName);
-    await fs.promises.copyFile(filePath, targetFilePath);
+    await fs.promises.writeFile(targetFilePath, Buffer.from(await imageResponse.arrayBuffer()));
     console.log(`Created product image file ${targetFilePath}`);
-    event.reply("updateProductImage", targetFileName);
+
+    return targetFileName;
 }
 
 const createWindow = (): void => {
@@ -82,7 +151,7 @@ const createWindow = (): void => {
 
     ipcMain.handle("getTransactions", handleGetTransactions);
     ipcMain.handle("appendTransaction", handleAppendTransaction);
-    ipcMain.on("selectProductImage", handleSelectProductImage);
+    ipcMain.handle("fetchProductImage", handleFetchProductImage);
 
     protocol.registerFileProtocol("productimage", (request, callback) => {
         const file = request.url.substr(15);
