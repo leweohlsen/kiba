@@ -11,35 +11,26 @@ const StatsPage: React.FC = () => {
     const totalBankBalance = useSelector(selectTotalBankBalance);
     const stats = useSelector(selectStats);
 
-    const renderChart = () => {
-        const primaryAxis = useMemo(
-            (): AxisOptions<DailySales> => ({
-                getValue: (datum) => new Date(datum.timestamp),
-            }),
-            []
-        );
+    const primaryAxis = useMemo(
+        (): AxisOptions<DailySales> => ({
+            scaleType: "time",
+            getValue: (datum) => new Date(datum.timestamp),
+        }),
+        []
+    );
 
-        const secondaryAxes = useMemo(
-            (): AxisOptions<DailySales>[] => [
-                {
-                    getValue: (datum) => datum.sales,
-                    elementType: "line",
-                },
-            ],
-            []
-        );
+    const secondaryAxes = useMemo(
+        (): AxisOptions<DailySales>[] => [
+            {
+                scaleType: "linear",
+                getValue: (datum) => datum.sales,
+                elementType: "line",
+            },
+        ],
+        []
+    );
 
-        console.log(stats);
-        return (
-            <Chart
-                options={{
-                    data: stats.dailyCategorySales,
-                    primaryAxis,
-                    secondaryAxes,
-                }}
-            />
-        );
-    };
+    const hasSalesData = stats.dailyCategorySales.some((series) => series.data.length > 0);
 
     return (
         <>
@@ -64,7 +55,17 @@ const StatsPage: React.FC = () => {
                             height: "400px",
                         }}
                     >
-                        {renderChart()}
+                        {hasSalesData ? (
+                            <Chart
+                                options={{
+                                    data: stats.dailyCategorySales,
+                                    primaryAxis,
+                                    secondaryAxes,
+                                }}
+                            />
+                        ) : (
+                            <div>Noch keine Verkaufsdaten vorhanden.</div>
+                        )}
                     </div>
                 </Col>
             </Row>

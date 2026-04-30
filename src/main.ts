@@ -54,7 +54,7 @@ type DuckDuckGoImageResult = {
     thumbnail?: string;
 };
 
-async function fetchFirstImageUrl(query: string): Promise<string> {
+async function fetchFirstImageUrls(query: string): Promise<string[]> {
     const encodedQuery = encodeURIComponent(query);
     const searchPageUrl = `https://duckduckgo.com/?q=${encodedQuery}&iax=images&ia=images`;
     const searchPageResponse = await fetch(searchPageUrl, {
@@ -92,12 +92,13 @@ async function fetchFirstImageUrl(query: string): Promise<string> {
     }
 
     const imageSearch = (await imageSearchResponse.json()) as { results?: DuckDuckGoImageResult[] };
-    const imageUrl = imageSearch.results?.[0]?.image || imageSearch.results?.[0]?.thumbnail;
-    if (!imageUrl) {
+    const firstResult = imageSearch.results?.[0];
+    const imageUrls = [firstResult?.image, firstResult?.thumbnail].filter(Boolean) as string[];
+    if (imageUrls.length === 0) {
         throw new Error("Image search returned no results");
     }
 
-    return imageUrl;
+    return imageUrls;
 }
 
 function getImageExtension(contentType: string | null, imageUrl: string): string {
@@ -117,22 +118,43 @@ async function handleFetchProductImage(_: IpcMainInvokeEvent, productId: string,
         throw new Error("Product image search query is empty");
     }
 
-    const imageUrl = await fetchFirstImageUrl(trimmedQuery);
-    const imageResponse = await fetch(imageUrl, {
-        headers: { "User-Agent": "Mozilla/5.0" },
-    });
-    if (!imageResponse.ok) {
-        throw new Error(`Image download failed with status ${imageResponse.status}`);
+    const imageUrls = await fetchFirstImageUrls(trimmedQuery);
+    let lastError: Error = undefined;
+
+    for (const imageUrl of imageUrls) {
+        try {
+            const imageResponse = await fetch(imageUrl, {
+                headers: {
+                    Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                    Referer: "https://duckduckgo.com/",
+                    "User-Agent": "Mozilla/5.0",
+                },
+            });
+            if (!imageResponse.ok) {
+                throw new Error(`Image download failed with status ${imageResponse.status}`);
+            }
+
+            const contentType = imageResponse.headers.get("content-type");
+            if (!contentType?.startsWith("image/")) {
+                throw new Error(`Image download returned ${contentType || "unknown content type"}`);
+            }
+
+            const targetFileName =
+                productId + "-" + Date.now() + getImageExtension(imageResponse.headers.get("content-type"), imageUrl);
+            const productImageDir = path.join(app.getPath("userData"), "product_images");
+            await fs.promises.mkdir(productImageDir, { recursive: true });
+            const targetFilePath = path.join(productImageDir, targetFileName);
+            await fs.promises.writeFile(targetFilePath, Buffer.from(await imageResponse.arrayBuffer()));
+            console.log(`Created product image file ${targetFilePath}`);
+
+            return targetFileName;
+        } catch (error) {
+            lastError = error as Error;
+            console.warn(`Could not download product image from ${imageUrl}: ${lastError.message}`);
+        }
     }
 
-    const targetFileName = productId + getImageExtension(imageResponse.headers.get("content-type"), imageUrl);
-    const productImageDir = path.join(app.getPath("userData"), "product_images");
-    await fs.promises.mkdir(productImageDir, { recursive: true });
-    const targetFilePath = path.join(productImageDir, targetFileName);
-    await fs.promises.writeFile(targetFilePath, Buffer.from(await imageResponse.arrayBuffer()));
-    console.log(`Created product image file ${targetFilePath}`);
-
-    return targetFileName;
+    throw lastError || new Error("Could not download product image");
 }
 
 const createWindow = (): void => {
