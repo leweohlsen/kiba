@@ -56,3 +56,53 @@ export type Stats = {
     totalTurnover: number;
     dailyCategorySales: Series[];
 };
+
+export type TopProductSale = {
+    id: string;
+    name: string;
+    quantity: number;
+    turnover: number;
+};
+
+export type TopShopper = {
+    id: string;
+    name: string;
+    purchases: number;
+    turnover: number;
+};
+
+export type StatsTimePeriod = "24h" | "7d" | "30d" | "all";
+
+export type StatsTimePeriodOption = {
+    label: string;
+    value: StatsTimePeriod;
+    ms?: number;
+};
+
+export type HourlyDemand = {
+    id: string;
+    label: string;
+    itemsSold: number;
+};
+
+export type KioskSessionStats = {
+    id: string;
+    label: string;
+    startTimestamp: number;
+    endTimestamp: number;
+    purchases: number;
+    itemsSold: number;
+    turnover: number;
+};
+
+export type KioskStats = {
+    averageBasket: number;
+    hourlyDemand: HourlyDemand[];
+    itemsSold: number;
+    purchases: number;
+    selectedPeriod: StatsTimePeriodOption;
+    sessions: KioskSessionStats[];
+    topProducts: TopProductSale[];
+    topShoppers: TopShopper[];
+    totalTurnover: number;
+};
