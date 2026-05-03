@@ -1,7 +1,7 @@
 # Maintainer: Lewe Ohlsen <mail@lewe.io>
 pkgname=kiba
-pkgver=1.1.4
-pkgrel=2
+pkgver=1.1.5
+pkgrel=1
 pkgdesc="Kiosk and bank system for accounts, products, and transactions"
 arch=('x86_64')
 url="https://github.com/leweohlsen/kiba"
